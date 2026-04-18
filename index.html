@@ -4,51 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>You Can't Spell Alternative Text without AI</title>
-    <!-- Tailwind CSS for utility-first styling -->
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* SMACSS - BASE STYLES 
-           Core defaults, resets, and CSS variables 
+           Core defaults, typography, and theme variables.
         */
         :root {
             --bg-main: #0f172a;      /* Slate 900 */
             --bg-card: #1e293b;      /* Slate 800 */
+            --bg-notes: #020617;    /* Slate 950 */
             --text-main: #f8fafc;    /* Slate 50 */
             --text-muted: #94a3b8;   /* Slate 400 */
             --accent: #3b82f6;       /* Blue 500 */
             --accent-focus: #60a5fa; /* Blue 400 */
+            --border-color: #334155; /* Slate 700 */
             --transition-speed: 0.3s;
+            --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
             background-color: var(--bg-main);
             color: var(--text-main);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: var(--font-sans);
             margin: 0;
             line-height: 1.5;
             height: 100vh;
-            overflow: hidden;
+            overflow: hidden; /* App container handles scrolling */
         }
 
-        /* Focus indicators for WCAG 2.1 AA compliance */
+        h1, h2, p, ul {
+            margin: 0;
+        }
+
+        button {
+            cursor: pointer;
+            font-family: inherit;
+            border: none;
+            background: none;
+            color: inherit;
+        }
+
+        /* Focus indicators for WCAG 2.1 AA */
         :focus-visible {
             outline: 3px solid var(--accent-focus);
             outline-offset: 4px;
         }
 
         /* SMACSS - LAYOUT STYLES 
-           The skeleton and structural landmarks 
+           The major structural landmarks of the page.
         */
         .l-app-container {
             display: flex;
             flex-direction: column;
             height: 100vh;
+            width: 100vw;
         }
 
         .l-header {
             background-color: var(--bg-card);
-            border-bottom: 1px solid #334155;
-            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -63,36 +81,88 @@
         }
 
         .l-sidebar {
-            width: 16rem;
+            width: 18rem;
             background-color: var(--bg-card);
-            border-right: 1px solid #334155;
+            border-right: 1px solid var(--border-color);
             overflow-y: auto;
             transition: transform var(--transition-speed) ease;
+            flex-shrink: 0;
         }
 
         .l-content {
             flex: 1;
             position: relative;
             background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
-            overflow: hidden; /* Slides manage their own internal overflow */
-            outline: none;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
+            outline: none;
         }
 
         .l-notes {
-            width: 20rem;
-            background-color: #020617; /* Slate 950 */
-            border-left: 1px solid #334155;
-            padding: 1.5rem;
+            width: 22rem;
+            background-color: var(--bg-notes);
+            border-left: 1px solid var(--border-color);
+            padding: 2rem;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
+            flex-shrink: 0;
         }
 
         /* SMACSS - MODULE STYLES 
-           Reusable visual components 
+           Reusable components.
         */
+        
+        /* Nav Buttons */
+        .m-nav-btn {
+            width: 100%;
+            text-align: left;
+            padding: 0.85rem 1rem;
+            font-size: 0.875rem;
+            border-left: 4px solid transparent;
+            color: var(--text-muted);
+            transition: background var(--transition-speed);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .m-nav-btn:hover {
+            background-color: var(--border-color);
+            color: var(--text-main);
+        }
+
+        .m-nav-btn-num {
+            opacity: 0.5;
+            width: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .m-nav-btn-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Skip Link */
+        .m-skip-link {
+            position: absolute;
+            top: -100px;
+            left: 1rem;
+            background: var(--accent);
+            color: white;
+            padding: 1rem 2rem;
+            z-index: 100;
+            border-radius: 0 0 0.5rem 0.5rem;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .m-skip-link:focus {
+            top: 0;
+        }
+
+        /* Slides */
         .m-slide {
             display: none;
             flex-direction: column;
@@ -100,7 +170,7 @@
             align-items: center;
             height: 100%;
             width: 100%;
-            padding: 2rem;
+            padding: 3rem;
             overflow-y: auto;
             animation: slideIn 0.4s cubic-bezier(0, 0, 0.2, 1);
         }
@@ -110,27 +180,65 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Standard Content Card */
+        /* Card Content */
         .m-slide-card {
-            max-width: 64rem;
+            max-width: 60rem;
             width: 100%;
             background-color: var(--bg-card);
-            padding: 3rem;
-            border-radius: 1.5rem;
-            border: 1px solid #334155;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            padding: 4rem;
+            border-radius: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
             flex-shrink: 0;
         }
 
-        /* Hero Slide: Image + Right-side Text Overlay */
+        .m-slide-title {
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            line-height: 1.1;
+        }
+
+        .m-slide-subtitle {
+            font-size: 1.5rem;
+            color: var(--accent);
+            margin-bottom: 2.5rem;
+            font-weight: 500;
+            font-style: italic;
+        }
+
+        .m-slide-list {
+            list-style: none;
+            padding: 0;
+            font-size: 1.5rem;
+            color: #cbd5e1; /* Slate 300 */
+        }
+
+        .m-slide-list-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .m-slide-bullet {
+            width: 0.6rem;
+            height: 0.6rem;
+            background-color: var(--accent);
+            border-radius: 50%;
+            margin-top: 0.6rem;
+            flex-shrink: 0;
+        }
+
+        /* Hero Slide (Title Metaphor) */
         .m-slide--hero {
-            padding: 0; 
-            background-size: contain; 
-            background-position: left center; 
+            padding: 0;
+            background-size: contain;
+            background-position: left center;
             background-repeat: no-repeat;
-            background-color: #000; 
-            overflow: hidden;
+            background-color: #000;
             position: relative;
+            overflow: hidden;
         }
 
         .m-slide-overlay {
@@ -139,8 +247,8 @@
             top: 0;
             bottom: 0;
             width: 45%;
-            background-color: rgba(15, 23, 42, 0.95); 
-            backdrop-filter: blur(8px);
+            background-color: rgba(15, 23, 42, 0.96);
+            backdrop-filter: blur(12px);
             padding: 4rem;
             display: flex;
             flex-direction: column;
@@ -148,9 +256,7 @@
             border-left: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Full Image Slide Module
-           Simply displays the image full-screen
-        */
+        /* Full Image Slide */
         .m-slide--full {
             padding: 0;
             background-color: #000;
@@ -162,72 +268,83 @@
             height: 100%;
             object-fit: contain;
             display: block;
-            /* Fallback style if image fails to load */
             color: white;
             text-align: center;
-            padding: 2rem;
             font-style: italic;
         }
 
-        .m-nav-btn {
-            width: 100%;
-            text-align: left;
-            padding: 0.75rem 1rem;
-            font-size: 0.875rem;
-            border-left: 4px solid transparent;
-            color: var(--text-muted);
-            transition: all 0.2s;
-        }
-
-        .m-nav-btn:hover {
-            background-color: #334155;
-        }
-
-        .m-skip-link {
-            position: absolute;
-            top: -100px;
-            left: 0.5rem;
-            background: var(--accent);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            z-index: 100;
-            border-radius: 0 0 0.5rem 0.5rem;
-        }
-
-        .m-skip-link:focus {
-            top: 0;
-        }
-
+        /* Controls */
         .m-controls {
             position: absolute;
-            bottom: 2rem;
+            bottom: 3rem;
             left: 0;
             right: 0;
             display: flex;
             justify-content: center;
-            gap: 1.5rem;
+            gap: 2rem;
             z-index: 40;
         }
 
+        .m-btn-circle {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+            transition: all 0.2s;
+        }
+
+        .m-btn-circle:hover:not(:disabled) {
+            background-color: var(--border-color);
+            transform: scale(1.05);
+        }
+
+        .m-btn-circle:disabled {
+            opacity: 0.2;
+            cursor: not-allowed;
+        }
+
+        .m-btn-primary {
+            background-color: var(--accent);
+            border-color: var(--accent-focus);
+        }
+
+        .m-btn-primary:hover:not(:disabled) {
+            background-color: var(--accent-focus);
+        }
+
+        /* Icons */
+        .m-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.5;
+        }
+
         /* SMACSS - STATE STYLES 
-           Classes applied during runtime 
+           Classes modified via JavaScript.
         */
-        .is-active {
-            display: flex !important;
-        }
-
-        .m-nav-btn.is-selected {
-            background-color: rgba(59, 130, 246, 0.1);
-            border-left-color: var(--accent);
-            color: white;
-            font-weight: 600;
-        }
-
         .is-hidden {
             display: none !important;
         }
 
-        /* Utility for screen-reader-only text (Accessibility Landmark) */
+        .is-active {
+            display: flex !important;
+        }
+
+        .is-selected {
+            background-color: rgba(59, 130, 246, 0.15) !important;
+            border-left-color: var(--accent) !important;
+            color: white !important;
+            font-weight: bold;
+        }
+
+        /* Accessibility Utilities */
         .sr-only {
             position: absolute;
             width: 1px;
@@ -244,101 +361,84 @@
         @media print {
             .no-print { display: none !important; }
             .l-sidebar, .l-notes, .m-controls { display: none !important; }
-            .m-slide { display: block !important; page-break-after: always; }
+            .m-slide { display: flex !important; page-break-after: always; height: auto; }
         }
 
-        /* Responsive adjustments */
+        /* Responsive Breakpoints */
         @media (max-width: 1024px) {
-            .m-slide-overlay {
-                width: 55%;
-                padding: 2rem;
-            }
+            .m-slide-overlay { width: 55%; padding: 2rem; }
+            .m-slide-title { font-size: 2.25rem; }
         }
 
         @media (max-width: 768px) {
-            .m-slide--hero {
-                background-position: center top;
-            }
-            .m-slide-overlay {
-                position: relative;
-                width: 100%;
-                background-color: rgba(15, 23, 42, 0.9);
-                padding: 2rem;
-                height: 50%;
-                border-left: none;
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-            }
+            .l-sidebar, .l-notes { width: 100%; position: absolute; height: 100%; z-index: 100; }
+            .m-slide-overlay { position: relative; width: 100%; height: auto; border-left: none; border-top: 1px solid var(--border-color); }
+            .m-slide--hero { background-position: center top; flex-direction: column; justify-content: flex-start; }
+            .m-slide-card { padding: 2rem; }
         }
     </style>
 </head>
 <body class="l-app-container">
 
-    <!-- WCAG 2.4.1 Bypass Blocks -->
     <a href="#main-content" class="m-skip-link">Skip to slide content</a>
 
-    <!-- Top Header / Banner Landmark -->
+    <!-- Header -->
     <header class="l-header" role="banner">
-        <div class="flex items-center gap-3">
-            <svg aria-hidden="true" class="w-6 h-6 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <svg class="m-icon" style="color: var(--accent-focus);" viewBox="0 0 24 24">
+                <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <h1 class="text-lg font-bold uppercase tracking-tight">Alt Text + AI</h1>
+            <h1 style="font-size: 1.125rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em;">Alt Text + AI</h1>
         </div>
         
-        <!-- Screen Reader Announcer for Navigation changes -->
-        <div id="slide-announcer" class="sr-only" aria-live="polite"></div>
+        <div id="slide-announcer" class="sr-only" aria-live="polite">Presenter mode active</div>
         
-        <!-- Visual Slide Progress -->
-        <div class="text-sm font-mono text-slate-400" aria-hidden="true">
+        <div style="font-size: 0.875rem; font-family: monospace; color: var(--text-muted);" aria-hidden="true">
             Slide <span id="current-slide-num">1</span> of <span id="total-slide-num">42</span>
         </div>
     </header>
 
     <div class="l-main-wrapper">
-        <!-- Sidebar Navigation / Navigation Landmark -->
-        <nav id="slide-nav" class="l-sidebar no-print" aria-label="Slide Deck Navigation">
-            <ul id="slide-list" class="flex flex-col m-0 p-0 list-none">
-                <!-- Dynamically populated by JavaScript -->
+        <!-- Sidebar Navigation -->
+        <nav id="slide-nav" class="l-sidebar no-print is-hidden" aria-label="Slide Deck Navigation">
+            <ul id="slide-list" style="list-style: none; padding: 0;">
+                <!-- Populated by JS -->
             </ul>
         </nav>
 
-        <!-- Main Content Area / Main Landmark -->
+        <!-- Main Content -->
         <main id="main-content" class="l-content" tabindex="-1">
-            <div id="slides-wrapper" class="h-full">
+            <div id="slides-wrapper" style="height: 100%;">
                 <!-- Slides Injected Here -->
             </div>
 
             <!-- On-screen Navigation Controls -->
             <div class="m-controls no-print">
-                <button id="prev-btn" class="p-4 rounded-full bg-slate-800/80 hover:bg-slate-700 transition-all shadow-xl border border-slate-700 disabled:opacity-20" aria-label="Previous Slide">
-                    <svg aria-hidden="true" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                <button id="prev-btn" class="m-btn-circle" aria-label="Previous Slide">
+                    <svg class="m-icon" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
-                <button id="next-btn" class="p-4 rounded-full bg-blue-600/90 hover:bg-blue-500 transition-all shadow-xl border border-blue-400 disabled:opacity-20" aria-label="Next Slide">
-                    <svg aria-hidden="true" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                <button id="next-btn" class="m-btn-circle m-btn-primary" aria-label="Next Slide">
+                    <svg class="m-icon" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </button>
             </div>
         </main>
 
-        <!-- Speaker Notes / Complementary Landmark -->
-        <aside id="speaker-notes" class="l-notes no-print" aria-label="Presenter Notes">
-            <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" /></svg>
+        <!-- Speaker Notes -->
+        <aside id="speaker-notes" class="l-notes no-print is-hidden" aria-label="Presenter Notes">
+            <h2 style="font-size: 0.75rem; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <svg style="width: 1rem; height: 1rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" /></svg>
                 Speaker Notes
             </h2>
-            <div id="notes-content" class="text-slate-300 text-sm leading-relaxed overflow-y-auto flex-1 pr-2">
+            <div id="notes-content" style="color: #cbd5e1; font-size: 0.875rem; flex: 1; overflow-y: auto;">
                 <!-- Updated via JS -->
             </div>
-            <div class="mt-6 pt-4 border-t border-slate-800 text-[10px] text-slate-600 italic">
-                Keyboard: L (List), N (Notes), P (Present)
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #1e293b; font-size: 0.65rem; color: #475569; font-style: italic;">
+                Shortcuts: L (List), N (Notes), P (Toggle Both)
             </div>
         </aside>
     </div>
 
     <script>
-        /**
-         * SLIDE DATA DEFINITION
-         * Using .png extensions and img/ prefix for path organization.
-         */
         const slideData = [
             {
                 title: "You Can't Spell “Alternative Text” without AI",
@@ -346,160 +446,160 @@
                 content: "Scott Davis<br>scott@thirstyhead.com",
                 image: "img/alt-text-ai-title-slide.png",
                 imageAlt: "An abstract visual metaphor showing a digital iris with data streams, representing machine vision.",
-                notes: "Welcome to the presentation. This talk is about the intersection of 30 years of standard failure and the new frontier of AI-assisted accessibility."
+                notes: "Welcome. This talk is about the intersection of 30 years of standard failure and the new frontier of AI-assisted accessibility."
             },
             {
-                title: "Driving Instructions for this Presentation",
+                title: "Driving Instructions",
                 subtitle: "Keyboard Shortcuts for Presenting",
                 points: [
                     "<strong>[ L ]</strong> Toggle Slide List (Left sidebar)",
                     "<strong>[ N ]</strong> Toggle Speaker Notes (Right sidebar)",
-                    "<strong>[ P ]</strong> Presenter Mode (Hides all UI bars)",
+                    "<strong>[ P ]</strong> Toggle Presenter Mode (Hides/Shows both)",
                     "<strong>[ Arrows / Space ]</strong> Move through slides"
                 ],
-                notes: "Since this is an accessibility talk, the deck itself is the first demo. Use these keys to clean up the screen for your audience."
+                notes: "The deck itself is the first demo. Use these keys to manage the UI during your talk."
             },
             {
                 title: "The Hidden Image Descriptions",
                 fullImage: true,
                 image: "img/nyt-mona-lisa-1.png",
                 imageAlt: 'New York Times Article "The Hidden Image Descriptions Making the Internet Accessible". A blank image showing two bad alt texts: "A painting of a person" and "May be an image of one person and a strawberry".',
-                notes: "This visual from the New York Times highlights the 'better than nothing' problem. Automated descriptions often fall into the trap of being technically correct but contextually useless."
+                notes: "Automated descriptions often fall into the trap of being technically correct but contextually useless."
             },
             {
                 title: "A 30-Year Failure",
                 points: ["HTML 2.0 (1995) introduced the <code>&lt;img&gt;</code> element.", "The 'alt' attribute was there from day one.", "Yet, over 50% of images still lack meaningful descriptions.", "Manual entry hasn't scaled with web complexity."],
-                notes: "Reference RFC 1866. We've had the tools for three decades. Why are we still failing?"
+                notes: "Reference RFC 1866. Why are we still failing after three decades?"
             },
             {
                 title: "WebAIM Million Statistics",
                 points: ["95.9% of home pages have WCAG failures.", "Missing Alt Text is the #2 overall error (53.1%).", "Average page has 1,437 elements (up 22% in 1 yr).", "Linked images account for 45% of alt errors."],
-                notes: "Highlight that pages are getting MORE complex, and the 'vibe coding' era is making accessibility harder to track without better systems."
+                notes: "Complexity is increasing, and accessibility is struggling to keep up."
             },
             {
                 title: "Google: The Biggest Blind User",
                 points: ["Google 'sees' text descriptions, not raw pixels.", "Search indexing relies on machine readability.", "Accessibility = SEO Performance.", "Inclusive code is essentially future-proof code."],
-                notes: "A powerful metaphor. Google is the primary user who needs alt text to understand the 'what' and 'why' of your site."
+                notes: "Google is the primary user who needs alt text to understand your site."
             },
             {
                 title: "Lived Experience: Haben Girma",
                 points: ["'jpg', 'image', or 'graphics' tells me nothing.", "Access is a choice we make in our code.", "Alt text is a window, not a compliance box."],
-                notes: "Quote from Haben Girma. Remind the audience that bad alt text is an active barrier to a human life."
+                notes: "Quote from Haben Girma. Bad alt text is an active barrier."
             },
             {
-                title: "Section 508: Specific Guidelines",
+                title: "Section 508 Guidelines",
                 points: ["Perceivable, Operable, Understandable, Robust (POUR).", "The standard for U.S. Federal accessibility.", "Focuses on purpose and relevance over aesthetics.", "Short and to the point."],
-                notes: "Entering the core technical section. We will now walk through every specific guideline from Section508.gov."
+                notes: "Walking through every specific guideline from Section508.gov."
             },
             {
-                title: "Guideline: Photos & Portraits",
+                title: "Photos & Portraits",
                 points: ["Purpose: Identify the subject.", "Helpful: 'Dr. Martin Luther King Jr.'", "Unhelpful: 'Man in black suit.'", "Context: Is the identity relevant?"],
                 notes: "Don't describe the pixels. Describe the person."
             },
             {
-                title: "Guideline: Images Containing Text",
+                title: "Images Containing Text",
                 points: ["Rule: Transcription must be word-for-word.", "Best Practice: Avoid 'burnt-in' text entirely.", "AI Win: Optical Character Recognition (OCR) is highly reliable here."],
-                notes: "Section 508 Example. Mention that this is where AI shines most."
+                notes: "OCR is where AI shines most."
             },
             {
-                title: "Guideline: Logos",
+                title: "Logos",
                 points: ["Logos are NEVER decorative.", "Requirement: Agency Name + Slogan/Message.", "Helpful: 'GSA logo: Section508.gov - Buy. Build. Be Accessible.'"],
-                notes: "Developers often mistakenly use alt='' for logos. 508 explicitly forbids this."
+                notes: "508 explicitly forbids empty alt for logos."
             },
             {
                 title: "Lived Experience: Thomas Reid",
                 points: ["Voice actor and advocate.", "Identity (race/gender) matters for agency.", "'Let me have that experience.'", "Context determines the depth of description."],
-                notes: "NYT Reference. Thomas Reid argues that stripping identity descriptors is its own form of exclusion."
+                notes: "Identity descriptors matter for exclusion."
             },
             {
-                title: "Guideline: Decorative Images",
+                title: "Decorative Images",
                 points: ["Purpose: Formatting, borders, spacers.", "Technical: <code>alt=''</code> or null attribute.", "Failure: Blank alt leads to filename reading."],
-                notes: "Explain the 'Empty Alt' vs 'No Alt' distinction. One is a signal; the other is a bug."
+                notes: "Empty Alt is a signal; No Alt is a bug."
             },
             {
-                title: "Guideline: Background Images",
+                title: "Background Images",
                 points: ["Usually skipped by Screen Readers.", "Danger: Critical info 'ghosted' in headers/footers.", "Requirement: Move essential data to body text."],
-                notes: "Specific technical warning for MS Word and PDF documents."
+                notes: "Technical warning for MS Word and PDFs."
             },
             {
-                title: "Guideline: Document Headers",
+                title: "Document Headers",
                 points: ["Logos in headers often get missed.", "Solution: Duplicate critical branding early in the body.", "Ensure agency identity is announced immediately."],
                 notes: "Example 6 from 508 guidelines."
             },
             {
-                title: "AI Hallucinations: Decorative Traps",
+                title: "AI Hallucinations",
                 points: ["Case Study: Gemini and the Statue of Liberty 'Bird'.", "AI interprets shadows as objects.", "Risk: Describing 'ghost' objects that don't exist."],
-                notes: "TetraLogical reference. AI is a probability engine, not a truth engine."
+                notes: "AI is a probability engine, not a truth engine."
             },
             {
                 title: "Lived Experience: Chancey Fleet",
                 points: ["The 'Emotional Valence' gap.", "AI: 'People street demonstration'.", "Human: 'Defiant protesters in the rain.'"],
-                notes: "NYT Quote. Highlighting why AI fails at 'mood' and 'vibe'."
+                notes: "AI fails at 'mood' and 'vibe'."
             },
             {
-                title: "Guideline: Controls & Navigation",
+                title: "Controls & Navigation",
                 points: ["Identify the action, not the shape.", "Helpful: 'Next Arrow Button', 'Submit Query'.", "Unhelpful: 'Right pointing triangle'."],
                 notes: "Functional images require functional text."
             },
             {
-                title: "Guideline: Form Elements",
+                title: "Form Elements",
                 points: ["Purpose: Input status and required fields.", "Example: The Red Asterisk.", "Helpful: <code>alt='Required'</code>.", "Unhelpful: <code>alt='Asterisk'</code>."],
-                notes: "Communicating the status of a form is the goal."
+                notes: "Communicate the status of the form."
             },
             {
-                title: "Guideline: Bullet Points",
+                title: "Bullet Points",
                 points: ["Semantic lists (UL/LI) are superior.", "Custom icons must announce as 'bullet'.", "Checkboxes must indicate state (Checked/Unchecked)."],
                 notes: "Structure over visual placement."
             },
             {
-                title: "Guideline: Spacers & Separators",
+                title: "Spacers & Separators",
                 points: ["Horizontal rules and empty images.", "Usually decorative.", "If used for a 'Section Break', describe as such."],
                 notes: "Cognitive navigation help."
             },
             {
-                title: "Lived Experience: Alt Text as Poetry",
-                points: ["Coklyat & Finnegan's workbook.", "Inclusive language requires identity validation.", "Delight over dry compliance.", "Belonging through expressive description."],
-                notes: "Moving beyond 'legal minimums' to 'human experience'."
+                title: "Alt Text as Poetry",
+                points: ["Workbook by Coklyat & Finnegan.", "Inclusive language requires identity validation.", "Delight over dry compliance.", "Belonging through expressive description."],
+                notes: "Moving beyond legal minimums."
             },
             {
-                title: "Guideline: Charts & Graphs",
-                points: ["The #1 AI Use Case: Data Summarization.", "Identify type (Bar/Pie) + Trend.", "Provide link to data table.", "Avoid repeating text already on page."],
-                notes: "508 Example 11. AI is excellent at summarizing complex tables into narrative trends."
+                title: "Charts & Graphs",
+                points: ["AI Use Case: Data Summarization.", "Identify type (Bar/Pie) + Trend.", "Provide link to data table.", "Avoid repeating text already on page."],
+                notes: "AI is excellent at summarizing tables."
             },
             {
-                title: "Guideline: Complex Diagrams",
+                title: "Complex Diagrams",
                 points: ["Flow charts, decision trees, org maps.", "Describe order and relationships.", "Often better conveyed as nested lists."],
-                notes: "Logical structure is the priority."
+                notes: "Logical structure is priority."
             },
             {
-                title: "Guideline: Watermarks",
-                points: ["Invisible to screen readers.", "Critical info (e.g. 'TOP SECRET') must be in body.", "Barrier for low-vision users due to contrast."],
-                notes: "Avoid watermarks whenever possible."
+                title: "Watermarks",
+                points: ["Invisible to screen readers.", "Critical info must be in body.", "Barrier for low-vision users due to contrast."],
+                notes: "Avoid watermarks."
             },
             {
-                title: "Guideline: Signatures",
+                title: "Signatures",
                 points: ["Authentication is the key.", "Helpful: 'Signature: Jane Doe'.", "Unhelpful: 'Jane Doe in neat cursive blue ink'."],
                 notes: "Identity over aesthetics."
             },
             {
-                title: "Lived Experience: Context & Protest",
-                points: ["The Thailand 'Three Finger Salute'.", "AI without context: 'Crowd raising hands'.", "AI with context: 'Emblem of resistance against authoritarian rule'."],
+                title: "Context & Protest",
+                points: ["Thailand 'Three Finger Salute'.", "AI without context: 'Crowd raising hands'.", "AI with context: 'Emblem of resistance against authoritarian rule'."],
                 notes: "Context turns description into meaning."
             },
             {
-                title: "Common Mistakes in Alt Text",
-                points: ["Redundancy (repeating surrounding text).", "File names (DCIM_102.jpg).", "Wrong language (English alt on Spanish pages).", "Descriptive clutter."],
-                notes: "Referencing the 'Mistakes' section from Section508.gov."
+                title: "Common Mistakes",
+                points: ["Redundancy (repeating surrounding text).", "File names (DCIM_102.png).", "Wrong language (English alt on Spanish pages).", "Descriptive clutter."],
+                notes: "Mistakes from Section508.gov."
             },
             {
                 title: "When Alt Text is Too Long",
-                points: ["Character limits exist (technically/effectively).", "Use <code>aria-describedby</code> for deep detail.", "Use <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> for disclosure."],
+                points: ["Use <code>aria-describedby</code> for deep detail.", "Use <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> for disclosure.", "Focus on relevance first."],
                 notes: "Practical implementation advice."
             },
             {
-                title: "Hallucination Spotlight: Identity Bias",
+                title: "Identity Bias",
                 points: ["Mini-CPM misgendering with 'her' pronouns.", "Llama 3.2 seeing 'two Black men' (only one in photo).", "Probabilistic errors lead to dignity violations."],
-                notes: "TetraLogical study 2025. AI inherits training data biases."
+                notes: "AI inherits training data biases."
             },
             {
                 title: "Can AI Write Meaningful Alt Text?",
@@ -507,29 +607,29 @@
                 notes: "Comparison of 2025 LLMs."
             },
             {
-                title: "Strategy: Human-AI Collaboration",
-                points: ["1. Be Specific (context is king).", "2. Keep it Concise.", "3. Be Sceptical (Hallucinations are real).", "4. Make it your own."],
-                notes: "The takeaway for the developers. Don't automate blindly."
+                title: "Human-AI Collaboration",
+                points: ["1. Be Specific.", "2. Keep it Concise.", "3. Be Sceptical (Hallucinations).", "4. Make it your own."],
+                notes: "Don't automate blindly."
             },
             {
-                title: "Adventures with BeMyAI",
+                title: "BeMyAI",
                 points: ["Léonie Watson's interactive approach.", "Conversational discovery vs. static text.", "Iterative prompting for deep dives."],
-                notes: "The future is talking to the image."
+                notes: "Talking to the image."
             },
             {
-                title: "The Ethical Responsibility",
-                points: ["Developers are the final filter.", "AI replicates training bias by default.", "Empathy cannot be automated.", "Dignity is a requirement, not a feature."],
-                notes: "Closing technical gaps with human ethics."
+                title: "Ethical Responsibility",
+                points: ["Developers are the final filter.", "AI replicates training bias by default.", "Empathy cannot be automated.", "Dignity is a requirement."],
+                notes: "Closing gap with ethics."
             },
             {
                 title: "Accessibility as Innovation",
                 points: ["AI agents are the new screen readers.", "Voice search dominance (50%+).", "Inclusive code is higher-quality code."],
-                notes: "The springboard for innovation."
+                notes: "Springboard for innovation."
             },
             {
                 title: "Action Plan",
                 points: ["Audit top 100 pages this week.", "Draft with AI, review with humans.", "Bookmark Section508.gov and WebAIM.", "Use 'Alt Text as Poetry' for tone."],
-                notes: "Homework for the attendees."
+                notes: "Homework."
             },
             {
                 title: "Resources",
@@ -539,10 +639,10 @@
             {
                 title: "Foster Belonging",
                 points: ["Identity matters.", "Representation is a choice.", "Dignity is the goal.", "Do better than 'better than nothing'."],
-                notes: "Emotional closing beat."
+                notes: "Emotional closing."
             },
             {
-                title: "Lived Experience: Amy Kavanagh",
+                title: "Amy Kavanagh",
                 points: ["'Efficiency is an accessibility feature.'", "Don't waste the user's time.", "Focus on the REASON for the image."],
                 notes: "A plea for relevance."
             },
@@ -558,16 +658,14 @@
                 notes: "Contact info."
             },
             {
-                title: "The Closing Punchline",
+                title: "Closing Punchline",
                 points: ["You can't spell 'Alternative Text' without AI.", "But AI can't do it without YOU.", "30 years is enough. Let's finish the job."],
                 notes: "Final summary statement."
             }
         ];
 
-        // State variables
         let currentIndex = 0;
 
-        // DOM Elements
         const slidesWrapper = document.getElementById('slides-wrapper');
         const slideList = document.getElementById('slide-list');
         const notesContent = document.getElementById('notes-content');
@@ -577,10 +675,6 @@
         const sideNav = document.getElementById('slide-nav');
         const speakerNotes = document.getElementById('speaker-notes');
 
-        /**
-         * INITIALIZATION
-         * Builds the slide deck elements and sidebar navigation
-         */
         function init() {
             totalNumDisplay.textContent = slideData.length;
             
@@ -589,10 +683,6 @@
                 slide.id = `slide-${index}`;
                 
                 if (data.fullImage) {
-                    /* SIMPLE FULL SCREEN IMAGE SLIDE 
-                       Per user request: Simply include the image with alt text.
-                       Added visually hidden heading for accessibility focus management.
-                    */
                     slide.className = `m-slide m-slide--full ${index === 0 ? 'is-active' : ''}`;
                     slide.innerHTML = `
                         <h2 class="sr-only" tabindex="-1">${data.title}</h2>
@@ -600,9 +690,6 @@
                     `;
                 } 
                 else if (data.image) {
-                    /* HERO SLIDE (Layout Slide 1) 
-                       Background image on left, text overlay on right.
-                    */
                     slide.className = `m-slide m-slide--hero ${index === 0 ? 'is-active' : ''}`;
                     slide.style.backgroundImage = `url('${data.image}')`;
                     slide.setAttribute('role', 'img');
@@ -610,36 +697,33 @@
                     
                     slide.innerHTML = `
                         <div class="m-slide-overlay">
-                            <h2 id="header-${index}" class="text-4xl md:text-5xl font-black mb-8 leading-tight outline-none" tabindex="-1">
+                            <h2 id="header-${index}" class="m-slide-title" tabindex="-1">
                                 ${data.title}
                             </h2>
-                            ${data.subtitle ? `<p class="text-2xl text-blue-400 mb-8 font-medium italic">${data.subtitle}</p>` : ''}
-                            ${data.content ? `<div class="text-2xl md:text-3xl text-slate-300 font-medium leading-relaxed mt-12">${data.content}</div>` : ''}
+                            ${data.subtitle ? `<p class="m-slide-subtitle">${data.subtitle}</p>` : ''}
+                            ${data.content ? `<div style="font-size: 1.5rem; color: var(--text-muted);">${data.content}</div>` : ''}
                         </div>
                     `;
                 } else {
-                    /* STANDARD CARD SLIDE
-                       The primary slide format for bulleted lists.
-                    */
                     slide.className = `m-slide ${index === 0 ? 'is-active' : ''}`;
                     slide.setAttribute('aria-labelledby', `header-${index}`);
                     
                     const pointsHtml = (data.points || []).map(p => `
-                        <li class="flex items-start gap-4 mb-4">
-                            <span aria-hidden="true" class="w-2 h-2 rounded-full bg-blue-500 mt-2.5 flex-shrink-0"></span>
+                        <li class="m-slide-list-item">
+                            <span aria-hidden="true" class="m-slide-bullet"></span>
                             <span>${p}</span>
                         </li>
                     `).join('');
                     
                     slide.innerHTML = `
                         <div class="m-slide-card">
-                            <h2 id="header-${index}" class="text-4xl md:text-5xl font-black mb-8 leading-tight outline-none" tabindex="-1">
+                            <h2 id="header-${index}" class="m-slide-title" tabindex="-1">
                                 ${data.title}
                             </h2>
-                            ${data.subtitle ? `<p class="text-2xl text-blue-400 mb-8 font-medium italic">${data.subtitle}</p>` : ''}
-                            ${data.content ? `<div class="text-2xl md:text-3xl text-slate-300 font-medium leading-relaxed mt-12">${data.content}</div>` : ''}
+                            ${data.subtitle ? `<p class="m-slide-subtitle">${data.subtitle}</p>` : ''}
+                            ${data.content ? `<div style="font-size: 1.5rem; margin-bottom: 2rem;">${data.content}</div>` : ''}
                             ${data.points && data.points.length > 0 ? `
-                                <ul class="text-xl md:text-2xl text-slate-300 leading-relaxed list-none p-0 mt-8">
+                                <ul class="m-slide-list">
                                     ${pointsHtml}
                                 </ul>` : ''}
                         </div>
@@ -647,13 +731,12 @@
                 }
                 slidesWrapper.appendChild(slide);
 
-                /* SIDEBAR ITEM */
                 const listItem = document.createElement('li');
                 listItem.role = "none";
                 listItem.innerHTML = `
                     <button id="nav-btn-${index}" class="m-nav-btn ${index === 0 ? 'is-selected' : ''}" role="menuitem">
-                        <span class="opacity-50 inline-block w-6">${index + 1}.</span>
-                        <span class="truncate inline-block w-44 align-bottom">${data.title}</span>
+                        <span class="m-nav-btn-num">${index + 1}.</span>
+                        <span class="m-nav-btn-text">${data.title}</span>
                     </button>
                 `;
                 listItem.querySelector('button').onclick = () => goToSlide(index);
@@ -663,10 +746,6 @@
             updateSlideUI();
         }
 
-        /**
-         * NAVIGATION LOGIC
-         * Updates classes, manages scroll, and announces for screen readers
-         */
         function goToSlide(index) {
             if (index < 0 || index >= slideData.length) return;
             
@@ -683,18 +762,12 @@
 
             updateSlideUI();
             
-            // Screen reader announcement
             announcer.textContent = `Slide ${currentIndex + 1} of ${slideData.length}: ${slideData[currentIndex].title}`;
             
-            // Move focus to header (visible or sr-only) for accessibility
             const header = activeSlide.querySelector('h2');
             if (header) header.focus();
         }
 
-        /**
-         * UI REFRESH
-         * Updates notes and primary button disabled states
-         */
         function updateSlideUI() {
             notesContent.innerHTML = slideData[currentIndex].notes || "No notes.";
             currentNumDisplay.textContent = currentIndex + 1;
@@ -706,27 +779,19 @@
             nextBtn.disabled = currentIndex === slideData.length - 1;
         }
 
-        /**
-         * TOGGLE FEATURES
-         * Presenter tools for customizing views
-         */
         function toggleSidebar() {
             sideNav.classList.toggle('is-hidden');
-            announcer.textContent = sideNav.classList.contains('is-hidden') ? "Slide list hidden" : "Slide list visible";
+            announcer.textContent = sideNav.classList.contains('is-hidden') ? "Sidebar hidden" : "Sidebar visible";
         }
 
         function toggleNotes() {
             speakerNotes.classList.toggle('is-hidden');
-            announcer.textContent = speakerNotes.classList.contains('is-hidden') ? "Speaker notes hidden" : "Speaker notes visible";
+            announcer.textContent = speakerNotes.classList.contains('is-hidden') ? "Notes hidden" : "Notes visible";
         }
 
-        /**
-         * KEYBOARD EVENTS
-         */
         window.addEventListener('keydown', (e) => {
             const key = e.key.toLowerCase();
             
-            // Arrows and Space navigation
             if (e.key === 'ArrowRight' || e.key === ' ') {
                 e.preventDefault();
                 goToSlide(currentIndex + 1);
@@ -736,26 +801,24 @@
                 goToSlide(currentIndex - 1);
             }
 
-            // Shortcut keys
             if (key === 'l') toggleSidebar();
             if (key === 'n') toggleNotes();
             if (key === 'p') {
-                const isHidden = sideNav.classList.contains('is-hidden') && speakerNotes.classList.contains('is-hidden');
-                if (isHidden) {
+                const currentlyHidden = sideNav.classList.contains('is-hidden') && speakerNotes.classList.contains('is-hidden');
+                if (currentlyHidden) {
                     sideNav.classList.remove('is-hidden');
                     speakerNotes.classList.remove('is-hidden');
                 } else {
                     sideNav.classList.add('is-hidden');
                     speakerNotes.classList.add('is-hidden');
                 }
-                announcer.textContent = isHidden ? "Standard view" : "Presenter mode active";
+                announcer.textContent = currentlyHidden ? "Standard mode" : "Presenter mode";
             }
         });
 
         document.getElementById('prev-btn').onclick = () => goToSlide(currentIndex - 1);
         document.getElementById('next-btn').onclick = () => goToSlide(currentIndex + 1);
 
-        // Start App
         window.onload = init;
     </script>
 </body>
