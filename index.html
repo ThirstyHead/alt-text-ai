@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIDS 2026: You Can't Spell Alternative Text without AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --accent: #3b82f6;
+            --accent-focus: #60a5fa;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        .slide-container {
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 2rem;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .slide-active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Focus styles for WCAG 2.1 AA */
+        :focus-visible {
+            outline: 3px solid var(--accent-focus);
+            outline-offset: 4px;
+        }
+
+        .skip-link {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            background: var(--accent);
+            color: white;
+            padding: 1rem;
+            z-index: 100;
+            transition: top 0.2s;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #475569;
+            border-radius: 10px;
+        }
+
+        /* Responsive height adjustments for smaller viewports */
+        @media (max-height: 600px) {
+            .slide-container { padding: 1rem; }
+            h2 { font-size: 1.5rem !important; }
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+
+    <a href="#main-content" class="skip-link">Skip to slide content</a>
+
+    <!-- Top Header -->
+    <header class="bg-slate-800 border-b border-slate-700 p-4 flex justify-between items-center shadow-lg z-10">
+        <div class="flex items-center gap-3">
+            <svg aria-hidden="true" class="w-6 h-6 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+            <h1 class="text-lg font-bold text-slate-100 uppercase tracking-tight">GIDS 2026: Alt Text + AI</h1>
+        </div>
+        <div id="slide-announcer" class="sr-only" aria-live="polite"></div>
+        <div class="text-sm font-mono text-slate-400" aria-hidden="true">
+            Slide <span id="current-slide-num">1</span> of <span id="total-slide-num">41</span>
+        </div>
+    </header>
+
+    <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar Navigation -->
+        <nav id="slide-nav" class="sidebar w-64 bg-slate-800 border-r border-slate-700 overflow-y-auto hidden md:block" aria-label="Slide Selection">
+            <ul id="slide-list" class="flex flex-col">
+                <!-- JS will populate -->
+            </ul>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main id="main-content" class="flex-1 relative bg-gradient-to-br from-slate-900 to-slate-800 overflow-y-auto outline-none" tabindex="-1">
+            <div id="slides-wrapper" class="h-full">
+                <!-- Slides will be injected here -->
+            </div>
+
+            <!-- Navigation Controls -->
+            <div class="absolute bottom-8 left-0 right-0 flex justify-center gap-6 no-print">
+                <button id="prev-btn" class="p-4 rounded-full bg-slate-700 hover:bg-slate-600 transition-all shadow-xl border border-slate-600 aria-disabled:opacity-30" aria-label="Previous Slide">
+                    <svg aria-hidden="true" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+                </button>
+                <button id="next-btn" class="p-4 rounded-full bg-blue-600 hover:bg-blue-500 transition-all shadow-xl border border-blue-400 aria-disabled:opacity-30" aria-label="Next Slide">
+                    <svg aria-hidden="true" class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+                </button>
+            </div>
+        </main>
+
+        <!-- Speaker Notes -->
+        <aside id="speaker-notes" class="w-80 bg-slate-900 border-l border-slate-700 p-6 hidden lg:flex flex-col shadow-inner" aria-label="Speaker Notes and Visual Guide">
+            <h2 class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+                <svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" /></svg>
+                Speaker Notes
+            </h2>
+            <div id="notes-content" class="text-slate-300 text-sm leading-relaxed overflow-y-auto flex-1 pr-2">
+                <!-- Injected by JS -->
+            </div>
+            <div class="mt-6 pt-4 border-t border-slate-800">
+                <p class="text-[10px] text-slate-500 italic">Visual requirement: Add relevant context image in final export.</p>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        const slideData = [
+            {
+                title: "You Can't Spell “Alternative Text” without AI",
+                subtitle: "GIDS 2026 | Great International Developer Summit",
+                points: ["Speaker: Scott Davis", "Digital Accessibility Advocate", "Architecture & Empathy"],
+                notes: "Establish the theme. AI is often used to *create* images, but its power to *describe* them is the key to 2026 accessibility."
+            },
+            {
+                title: "Driving Instructions for this Presentation",
+                subtitle: "Interactive Web-Based Slide Deck",
+                points: [
+                    "<strong>[ L ]</strong> Toggle Slide List (Left sidebar)",
+                    "<strong>[ N ]</strong> Toggle Speaker Notes (Right sidebar)",
+                    "<strong>[ P ]</strong> Presenter Mode (Hides both bars)",
+                    "<strong>[ Arrows / Space ]</strong> Navigate slides"
+                ],
+                notes: "Since we are practicing what we preach, this deck is fully accessible. These shortcuts help the audience or the presenter customize their view on any device."
+            },
+            {
+                title: "A 30-Year Failure",
+                points: ["HTML 2.0 (1995) introduced the IMG element.", "The 'alt' attribute was there from the start.", "Over 50% of the web still fails this basic check.", "Is manual entry simply not scaling?"],
+                notes: "Reference the 30-year history. Despite standards, human negligence remains high."
+            },
+            {
+                title: "WebAIM Million (2026 Statistics)",
+                points: ["95.9% of home pages have WCAG failures.", "Missing Alt Text is the #2 overall error (53.1%).", "Average page has 1,437 elements.", "linked images are 45% of the failures."],
+                notes: "Reference the WebAIM Million 2026 report. Emphasize that pages are getting more complex, making the 'alt text gap' wider."
+            },
+            {
+                title: "Google: The Internet's Biggest Blind User",
+                points: ["Google 'sees' descriptions, not pixels.", "Accessibility directly correlates to SEO ranking.", "80% of social media is watched without sound.", "Machine readability = Discoverability."],
+                notes: "Shift the perspective. If you don't care about users, care about your traffic. AI bots are 'blind' too."
+            },
+            {
+                title: "Lived Experience: Haben Girma",
+                points: ["Deafblind Lawyer and Harvard Graduate.", "'jpg', 'image', or 'graphics' tells her nothing.", "Access is a choice we make in our code.", "Alt text is her window into the digital world."],
+                notes: "Use the NYT quote. Highlight the human cost of poor descriptions. 'image.jpg' is an insult to the user."
+            },
+            {
+                title: "Section 508: Specific Guidelines Overview",
+                points: ["Perceivable, Operable, Understandable, Robust (POUR).", "Focus on purpose over visual description.", "Context is the primary driver of quality.", "Short and to the point."],
+                notes: "Introduction to the technical core of the talk. Define POUR for the audience."
+            },
+            {
+                title: "Guideline: Photos & Portraits",
+                points: ["Helpful: 'Dr. Martin Luther King Jr.'", "Unhelpful: 'Man in black and white suit.'", "AI performance: Often over-describes appearance instead of identification."],
+                notes: "Section 508 Example 1. Focus on the *identity* conveyed, not the aesthetic."
+            },
+            {
+                title: "Guideline: Images Containing Text",
+                points: ["Rule: Avoid embedding text in images.", "Requirement: transcribe word-for-word.", "Helpful: 'Card: Acquisition training Jan 29-Feb 9. Register Today.'", "Unhelpful: 'Event details graphic.'"],
+                notes: "Section 508 Example 2. Mention AI OCR (Optical Character Recognition) as a strong win here."
+            },
+            {
+                title: "Guideline: Logos",
+                points: ["Logos are NEVER decorative.", "Requirement: Agency/Company Name + Message.", "Helpful: 'GSA logo: Section508.gov - Buy. Build. Be Accessible.'", "Unhelpful: 'Logo'."],
+                notes: "Section 508 Example 3. Many developers wrongly mark logos as decorative."
+            },
+            {
+                title: "Lived Experience: Thomas Reid",
+                points: ["Voice actor and advocate.", "Argues that omitting identity (race/gender) removes agency.", "'Let me have that experience.'", "Context determines depth."],
+                notes: "Refer to the NYT article. Contrast Reid's request for detail with the 508 recommendation for brevity."
+            },
+            {
+                title: "Guideline: Decorative Images",
+                points: ["Pure formatting or redundant info.", "Technical: Use alt='' or null attribute.", "Failure: blank alt results in filename reading.", "Example: A stylized spacer line."],
+                notes: "Section 508 Example 4. Explain the 'alt string' vs 'no alt' distinction."
+            },
+            {
+                title: "Guideline: Background Images",
+                points: ["Usually skipped by screen readers.", "Danger: MS Word skips headers/footers automatically.", "Essential info must move to main text content.", "Confirm skipping during testing."],
+                notes: "Section 508 Example 5. Technical warning for document creators."
+            },
+            {
+                title: "Guideline: Document Headers",
+                points: ["Logo/Agency info in headers can be 'ghosted'.", "Solution: Duplicate critical branding in main body.", "Ensure identity is announced early."],
+                notes: "Section 508 Example 6. Relates to background image behavior in Word/PDF."
+            },
+            {
+                title: "AI Hallucinations: Decorative Traps",
+                points: ["TetraLogical Study: Gemini hallucinated a bird on Lady Liberty.", "AI interprets shadows as objects.", "Always 'Be Sceptical' (TetraLogical Tip)."],
+                notes: "Tie in the AI blog. Show that AI needs human review to avoid describing 'ghost' objects."
+            },
+            {
+                title: "Lived Experience: Chancey Fleet",
+                points: ["Disability Rights Advocate.", "The 'Emotional Valence' gap.", "AI: 'People street demonstration'.", "Human: 'Defiant protesters in the rain.'"],
+                notes: "NYT Quote. Emphasize that AI currently fails at conveying 'vibe' or emotion."
+            },
+            {
+                title: "Guideline: Controls & Navigation",
+                points: ["Icon buttons must describe the action.", "Helpful: 'Next Arrow Button', 'Submit'.", "Unhelpful: 'Right arrow', 'Icon 4'."],
+                notes: "Section 508 Example 7. Functional images require action-based text."
+            },
+            {
+                title: "Guideline: Form Elements",
+                points: ["Red Asterisk for required fields.", "Helpful: alt='Required' or label text integration.", "Unhelpful: alt='Asterisk' or 'Star'."],
+                notes: "Section 508 Example 8. The purpose is the status, not the shape."
+            },
+            {
+                title: "Guideline: Bullet Points",
+                points: ["Use semantic lists (UL/LI) first.", "Custom icons must announce as 'bullet'.", "Checkboxes: indicate state (Checked/Unchecked)."],
+                notes: "Section 508 Example 9. Semantic structure over visual placement."
+            },
+            {
+                title: "Guideline: Spacers & Separators",
+                points: ["Typically decorative (skipped).", "If convey meaning (Section Break), describe purpose.", "Consistency aids cognitive navigation."],
+                notes: "Section 508 Example 10. Layout images."
+            },
+            {
+                title: "Lived Experience: Identity Representation",
+                points: ["Alt Text as Poetry (Coklyat & Finnegan).", "Inclusive language requires identity validation.", "AI defaults to binary gender assumptions.", "Bias in training data leads to misgendering."],
+                notes: "The intersection of ethics and accessibility."
+            },
+            {
+                title: "Guideline: Charts & Graphs",
+                points: ["The #1 AI Use Case: Data Summarization.", "Identify chart type (Pie/Bar) and primary trend.", "Provide link to data table for detail.", "Concise first, comprehensive second."],
+                notes: "Section 508 Example 11. Reference 'Monday to Wednesday decline' example from source."
+            },
+            {
+                title: "Guideline: Complex Diagrams",
+                points: ["Flow charts, decision trees, org maps.", "Must describe order and relationships.", "Organizational charts often better as lists.", "Context: Who reports to whom?"],
+                notes: "Section 508 Example 12. Logic flows."
+            },
+            {
+                title: "Guideline: Watermarks",
+                points: ["Invisible to screen readers.", "Critical info (TOP SECRET) must be in text body.", "Barrier for low-vision users (Contrast issues).", "Avoid when possible."],
+                notes: "Section 508 Example 13. High risk of missing information."
+            },
+            {
+                title: "Guideline: Signatures",
+                points: ["Helpful: 'Signature: Jane Doe'.", "Unhelpful: 'Jane Doe in neat cursive'.", "The identity is the point, not the ink style."],
+                notes: "Section 508 Example 14. Authentication over aesthetics."
+            },
+            {
+                title: "Lived Experience: Protests & Context",
+                points: ["The Thailand 'Three Finger Salute'.", "AI without context: 'Crowd raising hands'.", "AI with context: 'Emblem of resistance against authoritarian rule'."],
+                notes: "TetraLogical study image. Context transforms 10 words of description into 10 words of meaning."
+            },
+            {
+                title: "Common Mistakes in Alt Text",
+                points: ["Repeating surrounding text (Redundancy).", "Using file names (DCIM_001.jpg).", "Wrong language (English alt on Spanish page).", "Too long / descriptive clutter."],
+                notes: "Refer to the 'Common Mistakes' section of the 508 article."
+            },
+            {
+                title: "When Alt Text is Too Long",
+                points: ["Alt tags have character limits (effective).", "Use aria-describedby for complex data.", "Use Details/Summary for disclosure.", "Allow user to choose deep dive."],
+                notes: "Practical implementation of 508's 'Long description' advice."
+            },
+            {
+                title: "Hallucination Spotlight: Identity Crisis",
+                points: ["Llama 3.2 seeing 'two Black men' where there was one.", "Mini-CPM misgendering with 'her'.", "Harmful descriptions are worse than none.", "Dignity is a requirement."],
+                notes: "The ethics of AI-generated identity. AI isn't 'truth,' it's a 'probability engine'."
+            },
+            {
+                title: "Can AI Write Meaningful Alt Text?",
+                points: ["Conclusion: No clear winner.", "Claude: Predictable/Concise.", "ChatGPT: Strong, but overly descriptive.", "Gemini: Frequent person-captioning refusal."],
+                notes: "Comparison from the TetraLogical 2025 AI study."
+            },
+            {
+                title: "Human-AI Collaboration Strategy",
+                points: ["1. Be Specific (Tell AI what it's for).", "2. Keep it Concise (10-20 words).", "3. Be Sceptical (Review everything).", "4. Make it your own (Human judgment)."],
+                notes: "The 'How-To' for developers in the audience."
+            },
+            {
+                title: "Adventures with BeMyAI",
+                points: ["Léonie Watson's approach.", "Iterative & Interactive.", "Ask: 'Tell me more about the people.'", "The future is conversational discovery."],
+                notes: "Reference the Watson post. Move from static text to dynamic interaction."
+            },
+            {
+                title: "The Ethical Responsibility",
+                points: ["AI replicates training bias.", "Omission of identity can be as harmful as error.", "Developers are the final filter.", "Empathy cannot be automated."],
+                notes: "Closing the gap between technical standards and human rights."
+            },
+            {
+                title: "Accessibility as Innovation",
+                points: ["AI agents are the new screen readers.", "Voice searches = 50% market share.", "Inclusive code is 'future-proof' code.", "Springboard for new interfaces."],
+                notes: "Scott Davis's signature perspective. Reference the GIDS abstract."
+            },
+            {
+                title: "Action Plan for Developers",
+                points: ["Audit top 100 pages today.", "Leverage AI to draft, never to publish blind.", "Use 'Alt Text as Poetry' for better tone.", "Build for the biggest blind user: Google."],
+                notes: "Give the audience homework."
+            },
+            {
+                title: "Resources to Bookmark",
+                points: ["Section508.gov / Authoring Alt Text", "WebAIM Million Annual Report", "Alt Text as Poetry Workbook", "TetraLogical Foundations Series"],
+                notes: "Citations from your research."
+            },
+            {
+                title: "Identity and Representation",
+                points: ["Acknowledging identity incorrectly causes harm.", "Foster belonging through dignity.", "The bar for AI is low because humans are failing.", "Do better than 'better than nothing'."],
+                notes: "Reiterate the 'Being Seen' lived experience theme."
+            },
+            {
+                title: "Lived Experience: Amy Kavanagh",
+                points: ["'If it's fashion, tell me about clothes.'", "Efficiency is an accessibility feature.", "Don't waste the user's time.", "Focus on the *reason* for the post."],
+                notes: "A plea for relevance over generic description."
+            },
+            {
+                title: "Final Thought",
+                points: ["Access is a human right.", "Technology is a tool.", "Empathy is the architecture.", "Let's build a web where no one is left behind."],
+                notes: "Inspiring close."
+            },
+            {
+                title: "Q&A",
+                points: ["Twitter/LinkedIn: @scottdavis", "Slides: [URL]", "Thank you, GIDS 2026!"],
+                notes: "Contact info."
+            },
+            {
+                title: "Final Check",
+                points: ["You can't spell 'Alternative Text' without AI.", "But AI can't do it without YOU.", "30 years is enough. Let's finish the job."],
+                notes: "Closing punchline."
+            }
+        ];
+
+        let currentIndex = 0;
+        const slidesWrapper = document.getElementById('slides-wrapper');
+        const slideList = document.getElementById('slide-list');
+        const notesContent = document.getElementById('notes-content');
+        const announcer = document.getElementById('slide-announcer');
+        const currentNumDisplay = document.getElementById('current-slide-num');
+        const totalNumDisplay = document.getElementById('total-slide-num');
+        
+        const sideNav = document.getElementById('slide-nav');
+        const speakerNotes = document.getElementById('speaker-notes');
+
+        // Initialize Slides
+        function init() {
+            totalNumDisplay.textContent = slideData.length;
+            
+            slideData.forEach((data, index) => {
+                // Create Slide HTML
+                const slide = document.createElement('article');
+                slide.id = `slide-${index}`;
+                slide.className = `slide-container ${index === 0 ? 'slide-active' : ''}`;
+                slide.setAttribute('aria-labelledby', `header-${index}`);
+                
+                let pointsHtml = data.points.map(p => `<li class="flex items-start gap-4 mb-4"><span aria-hidden="true" class="w-2 h-2 rounded-full bg-blue-500 mt-2 flex-shrink-0"></span><span>${p}</span></li>`).join('');
+                
+                slide.innerHTML = `
+                    <div class="max-w-4xl w-full bg-slate-800 p-12 rounded-3xl border border-slate-700 shadow-2xl">
+                        <h2 id="header-${index}" class="text-4xl md:text-5xl font-black mb-8 leading-tight outline-none" tabindex="-1">${data.title}</h2>
+                        ${data.subtitle ? `<p class="text-2xl text-blue-400 mb-8 font-medium italic">${data.subtitle}</p>` : ''}
+                        <ul class="text-xl md:text-2xl text-slate-300 leading-relaxed">
+                            ${pointsHtml}
+                        </ul>
+                    </div>
+                `;
+                slidesWrapper.appendChild(slide);
+
+                // Create Nav List
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <button id="nav-btn-${index}" class="w-full text-left p-3 text-sm border-l-4 transition-all ${index === 0 ? 'bg-blue-900/30 border-blue-500 text-blue-100' : 'border-transparent text-slate-400 hover:bg-slate-700'}">
+                        <span class="opacity-50 inline-block w-6">${index + 1}.</span>
+                        <span class="truncate inline-block w-40 align-bottom">${data.title}</span>
+                    </button>
+                `;
+                listItem.querySelector('button').onclick = () => goToSlide(index);
+                slideList.appendChild(listItem);
+            });
+
+            updateSlideUI();
+        }
+
+        function goToSlide(index) {
+            if (index < 0 || index >= slideData.length) return;
+            
+            document.querySelectorAll('.slide-container').forEach(s => s.classList.remove('slide-active'));
+            document.querySelectorAll('#slide-list button').forEach(b => {
+                b.classList.remove('bg-blue-900/30', 'border-blue-500', 'text-blue-100');
+                b.classList.add('border-transparent', 'text-slate-400');
+            });
+
+            currentIndex = index;
+            const activeSlide = document.getElementById(`slide-${currentIndex}`);
+            activeSlide.classList.add('slide-active');
+            
+            const activeNav = document.getElementById(`nav-btn-${currentIndex}`);
+            activeNav.classList.remove('border-transparent', 'text-slate-400');
+            activeNav.classList.add('bg-blue-900/30', 'border-blue-500', 'text-blue-100');
+            activeNav.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+            updateSlideUI();
+            
+            // WCAG Requirement: Announce and move focus
+            announcer.textContent = `Slide ${currentIndex + 1} of ${slideData.length}: ${slideData[currentIndex].title}`;
+            
+            // Move focus to header for screen reader
+            const header = activeSlide.querySelector('h2');
+            header.focus();
+        }
+
+        function updateSlideUI() {
+            notesContent.innerHTML = slideData[currentIndex].notes || "No notes for this slide.";
+            currentNumDisplay.textContent = currentIndex + 1;
+            
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            prevBtn.disabled = currentIndex === 0;
+            prevBtn.setAttribute('aria-disabled', currentIndex === 0);
+            
+            nextBtn.disabled = currentIndex === slideData.length - 1;
+            nextBtn.setAttribute('aria-disabled', currentIndex === slideData.length - 1);
+        }
+
+        function toggleSidebar() {
+            sideNav.classList.toggle('hidden');
+            sideNav.classList.toggle('md:block');
+            announcer.textContent = sideNav.classList.contains('hidden') ? "Slide list hidden" : "Slide list visible";
+        }
+
+        function toggleNotes() {
+            speakerNotes.classList.toggle('hidden');
+            speakerNotes.classList.toggle('lg:flex');
+            announcer.textContent = speakerNotes.classList.contains('hidden') ? "Speaker notes hidden" : "Speaker notes visible";
+        }
+
+        // Keyboard Controls
+        window.addEventListener('keydown', (e) => {
+            const key = e.key.toLowerCase();
+            
+            // Slide Navigation
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                goToSlide(currentIndex + 1);
+            }
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                goToSlide(currentIndex - 1);
+            }
+
+            // Presenter Shortcuts
+            if (key === 'l') {
+                toggleSidebar();
+            }
+            if (key === 'n') {
+                toggleNotes();
+            }
+            if (key === 'p') {
+                const isHiding = !sideNav.classList.contains('hidden') || !speakerNotes.classList.contains('hidden');
+                if (isHiding) {
+                    sideNav.classList.add('hidden');
+                    sideNav.classList.remove('md:block');
+                    speakerNotes.classList.add('hidden');
+                    speakerNotes.classList.remove('lg:flex');
+                } else {
+                    sideNav.classList.remove('hidden');
+                    sideNav.classList.add('md:block');
+                    speakerNotes.classList.remove('hidden');
+                    speakerNotes.classList.add('lg:flex');
+                }
+                announcer.textContent = isHiding ? "Presenter mode active" : "Standard view active";
+            }
+        });
+
+        document.getElementById('prev-btn').onclick = () => goToSlide(currentIndex - 1);
+        document.getElementById('next-btn').onclick = () => goToSlide(currentIndex + 1);
+
+        window.onload = init;
+    </script>
+</body>
+</html>
