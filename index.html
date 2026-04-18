@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>You Can't Spell Alternative Text without AI</title>
+    <!-- 
+      BASELINE 0.1 (Updated - Nav Relocation)
+      GIDS 2026 Presentation: "You Can't Spell Alternative Text without AI"
+      Framework: Vanilla HTML/CSS/JS
+      Architecture: SMACSS
+      Compliance: WCAG 2.1 AA
+    -->
     <style>
         /* SMACSS - BASE STYLES 
            Core defaults, typography, and theme variables.
@@ -32,7 +39,7 @@
             margin: 0;
             line-height: 1.5;
             height: 100vh;
-            overflow: hidden; /* App container handles scrolling */
+            overflow: hidden; 
         }
 
         h1, h2, p, ul {
@@ -49,12 +56,12 @@
 
         /* Focus indicators for WCAG 2.1 AA */
         :focus-visible {
-            outline: 3px solid var(--accent-focus);
-            outline-offset: 4px;
+            outline: 2px solid var(--accent-focus);
+            outline-offset: 2px;
         }
 
         /* SMACSS - LAYOUT STYLES 
-           The major structural landmarks of the page.
+           Major structural landmarks and rigid containers.
         */
         .l-app-container {
             display: flex;
@@ -66,7 +73,7 @@
         .l-header {
             background-color: var(--bg-card);
             border-bottom: 1px solid var(--border-color);
-            padding: 1rem 1.5rem;
+            padding: 0.75rem 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -77,7 +84,7 @@
         .l-main-wrapper {
             display: flex;
             flex: 1;
-            overflow: hidden;
+            overflow: hidden; 
         }
 
         .l-sidebar {
@@ -114,7 +121,7 @@
            Reusable components.
         */
         
-        /* Nav Buttons */
+        /* Nav Buttons (Sidebar) */
         .m-nav-btn {
             width: 100%;
             text-align: left;
@@ -230,7 +237,7 @@
             flex-shrink: 0;
         }
 
-        /* Hero Slide (Title Metaphor) */
+        /* Hero Slide (Text Overlaid on Image) */
         .m-slide--hero {
             padding: 0;
             background-size: contain;
@@ -268,75 +275,64 @@
             height: 100%;
             object-fit: contain;
             display: block;
-            color: white;
+            color: white; 
             text-align: center;
             font-style: italic;
         }
 
-        /* Controls */
-        .m-controls {
-            position: absolute;
-            bottom: 3rem;
-            left: 0;
-            right: 0;
+        /* Header Navigation Controls */
+        .m-header-nav {
             display: flex;
-            justify-content: center;
-            gap: 2rem;
-            z-index: 40;
+            align-items: center;
+            gap: 0.75rem;
+            background-color: rgba(15, 23, 42, 0.4);
+            padding: 0.25rem;
+            border-radius: 9999px;
+            border: 1px solid var(--border-color);
         }
 
-        .m-btn-circle {
-            width: 4rem;
-            height: 4rem;
+        .m-btn-nav {
+            width: 2.25rem;
+            height: 2.25rem;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: rgba(30, 41, 59, 0.8);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
             transition: all 0.2s;
+            color: var(--text-muted);
         }
 
-        .m-btn-circle:hover:not(:disabled) {
+        .m-btn-nav:hover:not(:disabled) {
             background-color: var(--border-color);
-            transform: scale(1.05);
+            color: var(--text-main);
         }
 
-        .m-btn-circle:disabled {
+        .m-btn-nav:disabled {
             opacity: 0.2;
             cursor: not-allowed;
         }
 
-        .m-btn-primary {
-            background-color: var(--accent);
-            border-color: var(--accent-focus);
+        .m-btn-nav--primary:not(:disabled) {
+            color: var(--accent);
         }
 
-        .m-btn-primary:hover:not(:disabled) {
-            background-color: var(--accent-focus);
+        .m-btn-nav--primary:hover:not(:disabled) {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--accent-focus);
         }
 
         /* Icons */
         .m-icon {
-            width: 1.5rem;
-            height: 1.5rem;
+            width: 1.25rem;
+            height: 1.25rem;
             stroke: currentColor;
             fill: none;
             stroke-width: 2.5;
         }
 
-        /* SMACSS - STATE STYLES 
-           Classes modified via JavaScript.
-        */
-        .is-hidden {
-            display: none !important;
-        }
-
-        .is-active {
-            display: flex !important;
-        }
-
+        /* SMACSS - STATE STYLES */
+        .is-hidden { display: none !important; }
+        .is-active { display: flex !important; }
         .is-selected {
             background-color: rgba(59, 130, 246, 0.15) !important;
             border-left-color: var(--accent) !important;
@@ -357,20 +353,19 @@
             border-width: 0;
         }
 
-        /* Print styles */
         @media print {
             .no-print { display: none !important; }
-            .l-sidebar, .l-notes, .m-controls { display: none !important; }
+            .l-sidebar, .l-notes { display: none !important; }
             .m-slide { display: flex !important; page-break-after: always; height: auto; }
         }
 
-        /* Responsive Breakpoints */
         @media (max-width: 1024px) {
             .m-slide-overlay { width: 55%; padding: 2rem; }
             .m-slide-title { font-size: 2.25rem; }
         }
 
         @media (max-width: 768px) {
+            .l-header { flex-direction: column; gap: 0.75rem; padding: 1rem; }
             .l-sidebar, .l-notes { width: 100%; position: absolute; height: 100%; z-index: 100; }
             .m-slide-overlay { position: relative; width: 100%; height: auto; border-left: none; border-top: 1px solid var(--border-color); }
             .m-slide--hero { background-position: center top; flex-direction: column; justify-content: flex-start; }
@@ -382,19 +377,32 @@
 
     <a href="#main-content" class="m-skip-link">Skip to slide content</a>
 
-    <!-- Header -->
+    <!-- Global Header -->
     <header class="l-header" role="banner">
-        <div style="display: flex; align-items: center; gap: 0.75rem;">
-            <svg class="m-icon" style="color: var(--accent-focus);" viewBox="0 0 24 24">
+        <!-- Title/Logo Area -->
+        <div style="display: flex; align-items: center; gap: 0.75rem; flex: 1;">
+            <svg class="m-icon" aria-hidden="true" style="color: var(--accent-focus); width: 1.5rem; height: 1.5rem;" viewBox="0 0 24 24">
                 <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
-            <h1 style="font-size: 1.125rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em;">Alt Text + AI</h1>
+            <h1 style="font-size: 1rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap;">Alt Text + AI</h1>
         </div>
         
+        <!-- Navigation Controls (Moved to Header) -->
+        <div class="m-header-nav no-print" role="group" aria-label="Slide navigation">
+            <button id="prev-btn" class="m-btn-nav" aria-label="Previous Slide">
+                <svg class="m-icon" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button id="next-btn" class="m-btn-nav m-btn-nav--primary" aria-label="Next Slide">
+                <svg class="m-icon" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+        </div>
+        
+        <!-- Screen reader live region -->
         <div id="slide-announcer" class="sr-only" aria-live="polite">Presenter mode active</div>
         
-        <div style="font-size: 0.875rem; font-family: monospace; color: var(--text-muted);" aria-hidden="true">
-            Slide <span id="current-slide-num">1</span> of <span id="total-slide-num">42</span>
+        <!-- Slide Count Area -->
+        <div style="font-size: 0.75rem; font-family: monospace; color: var(--text-muted); flex: 1; text-align: right;" aria-hidden="true">
+            Slide <span id="current-slide-num">1</span> of <span id="total-slide-num">44</span>
         </div>
     </header>
 
@@ -402,24 +410,14 @@
         <!-- Sidebar Navigation -->
         <nav id="slide-nav" class="l-sidebar no-print is-hidden" aria-label="Slide Deck Navigation">
             <ul id="slide-list" style="list-style: none; padding: 0;">
-                <!-- Populated by JS -->
+                <!-- Populated by JavaScript -->
             </ul>
         </nav>
 
-        <!-- Main Content -->
+        <!-- Main Slide Viewport -->
         <main id="main-content" class="l-content" tabindex="-1">
             <div id="slides-wrapper" style="height: 100%;">
-                <!-- Slides Injected Here -->
-            </div>
-
-            <!-- On-screen Navigation Controls -->
-            <div class="m-controls no-print">
-                <button id="prev-btn" class="m-btn-circle" aria-label="Previous Slide">
-                    <svg class="m-icon" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
-                <button id="next-btn" class="m-btn-circle m-btn-primary" aria-label="Next Slide">
-                    <svg class="m-icon" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </button>
+                <!-- Individual Slides Injected Here -->
             </div>
         </main>
 
@@ -430,7 +428,7 @@
                 Speaker Notes
             </h2>
             <div id="notes-content" style="color: #cbd5e1; font-size: 0.875rem; flex: 1; overflow-y: auto;">
-                <!-- Updated via JS -->
+                <!-- Updated dynamically -->
             </div>
             <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #1e293b; font-size: 0.65rem; color: #475569; font-style: italic;">
                 Shortcuts: L (List), N (Notes), P (Toggle Both)
@@ -444,9 +442,9 @@
                 title: "You Can't Spell “Alternative Text” without AI",
                 subtitle: "Modern Accessibility and Artificial Intelligence",
                 content: "Scott Davis<br>scott@thirstyhead.com",
-                image: "img/alt-text-ai-title-slide.png",
+                image: "https://thirstyhead.com/alt-text-ai/img/alt-text-ai-title-slide.png",
                 imageAlt: "An abstract visual metaphor showing a digital iris with data streams, representing machine vision.",
-                notes: "Welcome. This talk is about the intersection of 30 years of standard failure and the new frontier of AI-assisted accessibility."
+                notes: "Welcome to GIDS. This talk is about the intersection of 30 years of standard failure and the new frontier of AI-assisted accessibility."
             },
             {
                 title: "Driving Instructions",
@@ -457,217 +455,396 @@
                     "<strong>[ P ]</strong> Toggle Presenter Mode (Hides/Shows both)",
                     "<strong>[ Arrows / Space ]</strong> Move through slides"
                 ],
-                notes: "The deck itself is the first demo. Use these keys to manage the UI during your talk."
+                notes: "The deck itself is the first demo of accessibility. Use these keys to manage the UI during your talk."
             },
             {
                 title: "The Hidden Image Descriptions",
                 fullImage: true,
-                image: "img/nyt-mona-lisa-1.png",
+                image: "https://thirstyhead.com/alt-text-ai/img/nyt-mona-lisa-1.png",
                 imageAlt: 'New York Times Article "The Hidden Image Descriptions Making the Internet Accessible". A blank image showing two bad alt texts: "A painting of a person" and "May be an image of one person and a strawberry".',
-                notes: "Automated descriptions often fall into the trap of being technically correct but contextually useless."
+                notes: "Automated descriptions often fall into the trap of being technically correct but contextually useless. Note the Mona Lisa example."
             },
             {
                 title: "The Truth Behind the Hidden Image Descriptions",
                 fullImage: true,
-                image: "img/nyt-mona-lisa-2.png",
-                imageAlt: 'New York Times Article "The Hidden Image Descriptions Making the Internet Accessible". A blank image showing two bad alt texts: "A painting of a person" and "May be an image of one person and a strawberry".',
-                notes: "Automated descriptions often fall into the trap of being technically correct but contextually useless."
+                image: "https://thirstyhead.com/alt-text-ai/img/nyt-mona-lisa-2.png",
+                imageAlt: 'Visual of the Mona Lisa with actual alt-text overlay: "Image May Contain 1 or More Persons".',
+                notes: "Context is everything. AI needs to know it's a masterpiece, not just a 'person'."
+            },
+            {
+                title: "Foundations: Text Descriptions",
+                fullImage: true,
+                image: "https://thirstyhead.com/alt-text-ai/img/foundations-text-descriptions.png",
+                imageAlt: "TetraLogical blog post header for 'Foundations: text descriptions' showing icons representing code and inclusive design.",
+                notes: "Foundational reading from Henny Swan at TetraLogical. This slide introduces the core concepts of why we describe non-text content."
             },
             {
                 title: "A 30-Year Failure",
-                points: ["HTML 2.0 (1995) introduced the <code>&lt;img&gt;</code> element.", "The 'alt' attribute was there from day one.", "Yet, over 50% of images still lack meaningful descriptions.", "Manual entry hasn't scaled with web complexity."],
-                notes: "Reference RFC 1866. Why are we still failing after three decades?"
+                points: [
+                    "HTML 2.0 (1995) introduced the <code>&lt;img&gt;</code> element.", 
+                    "The 'alt' attribute was there from day one.", 
+                    "Yet, over 50% of images still lack meaningful descriptions.", 
+                    "Manual entry hasn't scaled with web complexity."
+                ],
+                notes: "Reference RFC 1866. Why are we still failing after three decades of having the tool available?"
             },
             {
                 title: "WebAIM Million Statistics",
-                points: ["95.9% of home pages have WCAG failures.", "Missing Alt Text is the #2 overall error (53.1%).", "Average page has 1,437 elements (up 22% in 1 yr).", "Linked images account for 45% of alt errors."],
-                notes: "Complexity is increasing, and accessibility is struggling to keep up."
+                points: [
+                    "95.9% of home pages have WCAG failures.", 
+                    "Missing Alt Text is the #2 overall error (53.1%).", 
+                    "Average page has 1,437 elements (up 22% in 1 yr).", 
+                    "Linked images account for 45% of alt errors."
+                ],
+                notes: "Complexity is increasing, and accessibility is struggling to keep up with the volume of elements."
             },
             {
                 title: "Google: The Biggest Blind User",
-                points: ["Google 'sees' text descriptions, not raw pixels.", "Search indexing relies on machine readability.", "Accessibility = SEO Performance.", "Inclusive code is essentially future-proof code."],
-                notes: "Google is the primary user who needs alt text to understand your site."
+                points: [
+                    "Google 'sees' text descriptions, not raw pixels.", 
+                    "Search indexing relies on machine readability.", 
+                    "Accessibility = SEO Performance.", 
+                    "Inclusive code is essentially future-proof code."
+                ],
+                notes: "Google is the primary user who needs alt text to understand your site's content and intent."
             },
             {
                 title: "Lived Experience: Haben Girma",
-                points: ["'jpg', 'image', or 'graphics' tells me nothing.", "Access is a choice we make in our code.", "Alt text is a window, not a compliance box."],
-                notes: "Quote from Haben Girma. Bad alt text is an active barrier."
+                points: [
+                    "'jpg', 'image', or 'graphics' tells me nothing.", 
+                    "Access is a choice we make in our code.", 
+                    "Alt text is a window, not a compliance box."
+                ],
+                notes: "Quote from advocate Haben Girma. Bad alt text is an active barrier to navigation."
             },
             {
                 title: "Section 508 Guidelines",
-                points: ["Perceivable, Operable, Understandable, Robust (POUR).", "The standard for U.S. Federal accessibility.", "Focuses on purpose and relevance over aesthetics.", "Short and to the point."],
-                notes: "Walking through every specific guideline from Section508.gov."
+                points: [
+                    "Perceivable, Operable, Understandable, Robust (POUR).", 
+                    "The standard for U.S. Federal accessibility.", 
+                    "Focuses on purpose and relevance over aesthetics.", 
+                    "Short and to the point."
+                ],
+                notes: "Walking through every specific guideline from Section508.gov as the blueprint."
             },
             {
                 title: "Photos & Portraits",
-                points: ["Purpose: Identify the subject.", "Helpful: 'Dr. Martin Luther King Jr.'", "Unhelpful: 'Man in black suit.'", "Context: Is the identity relevant?"],
-                notes: "Don't describe the pixels. Describe the person."
+                points: [
+                    "Purpose: Identify the subject.", 
+                    "Helpful: 'Dr. Martin Luther King Jr.'", 
+                    "Unhelpful: 'Man in black suit.'", 
+                    "Context: Is the identity relevant?"
+                ],
+                notes: "Don't describe the pixels. Describe the person if their identity matters to the content."
             },
             {
                 title: "Images Containing Text",
-                points: ["Rule: Transcription must be word-for-word.", "Best Practice: Avoid 'burnt-in' text entirely.", "AI Win: Optical Character Recognition (OCR) is highly reliable here."],
-                notes: "OCR is where AI shines most."
+                points: [
+                    "Rule: Transcription must be word-for-word.", 
+                    "Best Practice: Avoid 'burnt-in' text entirely.", 
+                    "AI Win: Optical Character Recognition (OCR) is highly reliable here."
+                ],
+                notes: "OCR is where AI shines most. Use it as a drafting tool for text heavy images."
             },
             {
                 title: "Logos",
-                points: ["Logos are NEVER decorative.", "Requirement: Agency Name + Slogan/Message.", "Helpful: 'GSA logo: Section508.gov - Buy. Build. Be Accessible.'"],
-                notes: "508 explicitly forbids empty alt for logos."
+                points: [
+                    "Logos are NEVER decorative.", 
+                    "Requirement: Agency Name + Slogan/Message.", 
+                    "Helpful: 'GSA logo: Section508.gov - Buy. Build. Be Accessible.'"
+                ],
+                notes: "508 explicitly forbids empty alt for logos. It's about branding and identification."
             },
             {
                 title: "Lived Experience: Thomas Reid",
-                points: ["Voice actor and advocate.", "Identity (race/gender) matters for agency.", "'Let me have that experience.'", "Context determines the depth of description."],
-                notes: "Identity descriptors matter for exclusion."
+                points: [
+                    "Voice actor and advocate.", 
+                    "Identity (race/gender) matters for agency.", 
+                    "'Let me have that experience.'", 
+                    "Context determines the depth of description."
+                ],
+                notes: "Identity descriptors matter. Omitting them is a form of exclusion."
             },
             {
                 title: "Decorative Images",
-                points: ["Purpose: Formatting, borders, spacers.", "Technical: <code>alt=''</code> or null attribute.", "Failure: Blank alt leads to filename reading."],
-                notes: "Empty Alt is a signal; No Alt is a bug."
+                points: [
+                    "Purpose: Formatting, borders, spacers.", 
+                    "Technical: <code>alt=''</code> or null attribute.", 
+                    "Failure: Blank alt leads to filename reading."
+                ],
+                notes: "Empty Alt is a signal; No Alt is a bug. Screen readers skip empty alt but read file names for missing ones."
             },
             {
                 title: "Background Images",
-                points: ["Usually skipped by Screen Readers.", "Danger: Critical info 'ghosted' in headers/footers.", "Requirement: Move essential data to body text."],
-                notes: "Technical warning for MS Word and PDFs."
+                points: [
+                    "Usually skipped by Screen Readers.", 
+                    "Danger: Critical info 'ghosted' in CSS backgrounds.", 
+                    "Requirement: Move essential data to body text."
+                ],
+                notes: "If it's in the background, it better not be important. Otherwise, bring it to the foreground."
             },
             {
                 title: "Document Headers",
-                points: ["Logos in headers often get missed.", "Solution: Duplicate critical branding early in the body.", "Ensure agency identity is announced immediately."],
-                notes: "Example 6 from 508 guidelines."
+                points: [
+                    "Logos in headers often get missed by readers.", 
+                    "Solution: Duplicate critical branding early in the body.", 
+                    "Ensure agency identity is announced immediately."
+                ],
+                notes: "Consistency across documents. Header content must be reachable."
             },
             {
                 title: "AI Hallucinations",
-                points: ["Case Study: Gemini and the Statue of Liberty 'Bird'.", "AI interprets shadows as objects.", "Risk: Describing 'ghost' objects that don't exist."],
-                notes: "AI is a probability engine, not a truth engine."
+                points: [
+                    "Case Study: Gemini and the Statue of Liberty 'Bird'.", 
+                    "AI interprets shadows as objects.", 
+                    "Risk: Describing 'ghost' objects that don't exist."
+                ],
+                notes: "AI is a probability engine, not a truth engine. Verification is mandatory."
             },
             {
                 title: "Lived Experience: Chancey Fleet",
-                points: ["The 'Emotional Valence' gap.", "AI: 'People street demonstration'.", "Human: 'Defiant protesters in the rain.'"],
-                notes: "AI fails at 'mood' and 'vibe'."
+                points: [
+                    "The 'Emotional Valence' gap.", 
+                    "AI: 'People street demonstration'.", 
+                    "Human: 'Defiant protesters in the rain.'"
+                ],
+                notes: "AI fails at 'mood' and 'vibe'. Humans provide the soul of the description."
             },
             {
                 title: "Controls & Navigation",
-                points: ["Identify the action, not the shape.", "Helpful: 'Next Arrow Button', 'Submit Query'.", "Unhelpful: 'Right pointing triangle'."],
-                notes: "Functional images require functional text."
+                points: [
+                    "Identify the action, not the shape.", 
+                    "Helpful: 'Next Arrow Button', 'Submit Query'.", 
+                    "Unhelpful: 'Right pointing triangle'."
+                ],
+                notes: "Functional images require functional text. Tell me what it DOES, not what it IS."
             },
             {
                 title: "Form Elements",
-                points: ["Purpose: Input status and required fields.", "Example: The Red Asterisk.", "Helpful: <code>alt='Required'</code>.", "Unhelpful: <code>alt='Asterisk'</code>."],
-                notes: "Communicate the status of the form."
+                points: [
+                    "Purpose: Input status and required fields.", 
+                    "Example: The Red Asterisk.", 
+                    "Helpful: <code>alt='Required'</code>.", 
+                    "Unhelpful: <code>alt='Asterisk'</code>."
+                ],
+                notes: "Communicate the status of the form. Use text for the label wherever possible."
             },
             {
                 title: "Bullet Points",
-                points: ["Semantic lists (UL/LI) are superior.", "Custom icons must announce as 'bullet'.", "Checkboxes must indicate state (Checked/Unchecked)."],
-                notes: "Structure over visual placement."
+                points: [
+                    "Semantic lists (UL/LI) are superior.", 
+                    "Custom icons must announce as 'bullet'.", 
+                    "Checkboxes must indicate state (Checked/Unchecked)."
+                ],
+                notes: "Structure over visual placement. AI can help check for semantic structure."
             },
             {
                 title: "Spacers & Separators",
-                points: ["Horizontal rules and empty images.", "Usually decorative.", "If used for a 'Section Break', describe as such."],
-                notes: "Cognitive navigation help."
+                points: [
+                    "Horizontal rules and empty images.", 
+                    "Usually decorative.", 
+                    "If used for a 'Section Break', describe as such."
+                ],
+                notes: "Cognitive navigation help. Don't let users guess why a line is there."
             },
             {
                 title: "Alt Text as Poetry",
-                points: ["Workbook by Coklyat & Finnegan.", "Inclusive language requires identity validation.", "Delight over dry compliance.", "Belonging through expressive description."],
-                notes: "Moving beyond legal minimums."
+                points: [
+                    "Workbook by Coklyat & Finnegan.", 
+                    "Inclusive language requires identity validation.", 
+                    "Delight over dry compliance.", 
+                    "Belonging through expressive description."
+                ],
+                notes: "Moving beyond legal minimums into a world of delight and belonging."
             },
             {
                 title: "Charts & Graphs",
-                points: ["AI Use Case: Data Summarization.", "Identify type (Bar/Pie) + Trend.", "Provide link to data table.", "Avoid repeating text already on page."],
-                notes: "AI is excellent at summarizing tables."
+                points: [
+                    "AI Use Case: Data Summarization.", 
+                    "Identify type (Bar/Pie) + Trend.", 
+                    "Provide link to data table.", 
+                    "Avoid repeating text already on page."
+                ],
+                notes: "AI is excellent at summarizing tables. Use it to generate the data overview."
             },
             {
                 title: "Complex Diagrams",
-                points: ["Flow charts, decision trees, org maps.", "Describe order and relationships.", "Often better conveyed as nested lists."],
-                notes: "Logical structure is priority."
+                points: [
+                    "Flow charts, decision trees, org maps.", 
+                    "Describe order and relationships.", 
+                    "Often better conveyed as nested lists."
+                ],
+                notes: "Logical structure is the priority. AI can turn a flowchart image into a list structure."
             },
             {
                 title: "Watermarks",
-                points: ["Invisible to screen readers.", "Critical info must be in body.", "Barrier for low-vision users due to contrast."],
-                notes: "Avoid watermarks."
+                points: [
+                    "Invisible to screen readers.", 
+                    "Critical info must be in body.", 
+                    "Barrier for low-vision users due to contrast."
+                ],
+                notes: "Avoid watermarks. They interfere with reading and hide info from screen readers."
             },
             {
                 title: "Signatures",
-                points: ["Authentication is the key.", "Helpful: 'Signature: Jane Doe'.", "Unhelpful: 'Jane Doe in neat cursive blue ink'."],
-                notes: "Identity over aesthetics."
+                points: [
+                    "Authentication is the key.", 
+                    "Helpful: 'Signature: Jane Doe'.", 
+                    "Unhelpful: 'Jane Doe in neat cursive blue ink'."
+                ],
+                notes: "Identity and verification are what matters here."
             },
             {
                 title: "Context & Protest",
-                points: ["Thailand 'Three Finger Salute'.", "AI without context: 'Crowd raising hands'.", "AI with context: 'Emblem of resistance against authoritarian rule'."],
-                notes: "Context turns description into meaning."
+                points: [
+                    "Thailand 'Three Finger Salute'.", 
+                    "AI without context: 'Crowd raising hands'.", 
+                    "AI with context: 'Emblem of resistance against authoritarian rule'."
+                ],
+                notes: "Context turns description into meaning. AI needs human-fed context."
             },
             {
                 title: "Common Mistakes",
-                points: ["Redundancy (repeating surrounding text).", "File names (DCIM_102.png).", "Wrong language (English alt on Spanish pages).", "Descriptive clutter."],
-                notes: "Mistakes from Section508.gov."
+                points: [
+                    "Redundancy (repeating surrounding text).", 
+                    "File names (DCIM_102.png).", 
+                    "Wrong language (English alt on Spanish pages).", 
+                    "Descriptive clutter."
+                ],
+                notes: "Avoid the 'image of a picture of' redundancy."
             },
             {
                 title: "When Alt Text is Too Long",
-                points: ["Use <code>aria-describedby</code> for deep detail.", "Use <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> for disclosure.", "Focus on relevance first."],
-                notes: "Practical implementation advice."
+                points: [
+                    "Use <code>aria-describedby</code> for deep detail.", 
+                    "Use <code>&lt;details&gt;</code>/<code>&lt;summary&gt;</code> for disclosure.", 
+                    "Focus on relevance first."
+                ],
+                notes: "Practical implementation advice for detailed images."
             },
             {
                 title: "Identity Bias",
-                points: ["Mini-CPM misgendering with 'her' pronouns.", "Llama 3.2 seeing 'two Black men' (only one in photo).", "Probabilistic errors lead to dignity violations."],
-                notes: "AI inherits training data biases."
+                points: [
+                    "Mini-CPM misgendering with 'her' pronouns.", 
+                    "Llama 3.2 seeing 'two Black men' (only one in photo).", 
+                    "Probabilistic errors lead to dignity violations."
+                ],
+                notes: "AI inherits training data biases. This is a risk to user dignity."
             },
             {
                 title: "Can AI Write Meaningful Alt Text?",
-                points: ["Claude: Concise and predictable.", "ChatGPT: Strong context, high descriptive detail.", "Gemini: Frequent person-captioning refusal.", "Verdict: Strong draft tool, poor 'Publish' tool."],
-                notes: "Comparison of 2025 LLMs."
+                points: [
+                    "Claude: Concise and predictable.", 
+                    "ChatGPT: Strong context, high descriptive detail.", 
+                    "Gemini: Frequent person-captioning refusal.", 
+                    "Verdict: Strong draft tool, poor 'Publish' tool."
+                ],
+                notes: "Comparison of current LLM performance (2025)."
             },
             {
                 title: "Human-AI Collaboration",
-                points: ["1. Be Specific.", "2. Keep it Concise.", "3. Be Sceptical (Hallucinations).", "4. Make it your own."],
-                notes: "Don't automate blindly."
+                points: [
+                    "1. Be Specific.", 
+                    "2. Keep it Concise.", 
+                    "3. Be Sceptical (Hallucinations).", 
+                    "4. Make it your own."
+                ],
+                notes: "Don't automate blindly. Use AI as a starting point, not the end."
             },
             {
                 title: "BeMyAI",
-                points: ["Léonie Watson's interactive approach.", "Conversational discovery vs. static text.", "Iterative prompting for deep dives."],
-                notes: "Talking to the image."
+                points: [
+                    "Léonie Watson's interactive approach.", 
+                    "Conversational discovery vs. static text.", 
+                    "Iterative prompting for deep dives."
+                ],
+                notes: "Talking to the image. A new paradigm for accessibility."
             },
             {
                 title: "Ethical Responsibility",
-                points: ["Developers are the final filter.", "AI replicates training bias by default.", "Empathy cannot be automated.", "Dignity is a requirement."],
-                notes: "Closing gap with ethics."
+                points: [
+                    "Developers are the final filter.", 
+                    "AI replicates training bias by default.", 
+                    "Empathy cannot be automated.", 
+                    "Dignity is a requirement."
+                ],
+                notes: "Closing the gap between technical code and human ethics."
             },
             {
                 title: "Accessibility as Innovation",
-                points: ["AI agents are the new screen readers.", "Voice search dominance (50%+).", "Inclusive code is higher-quality code."],
-                notes: "Springboard for innovation."
+                points: [
+                    "AI agents are the new screen readers.", 
+                    "Voice search dominance (50%+).", 
+                    "Inclusive code is higher-quality code."
+                ],
+                notes: "Springboard for innovation. Designing for the edges helps the middle."
             },
             {
                 title: "Action Plan",
-                points: ["Audit top 100 pages this week.", "Draft with AI, review with humans.", "Bookmark Section508.gov and WebAIM.", "Use 'Alt Text as Poetry' for tone."],
-                notes: "Homework."
+                points: [
+                    "Audit top 100 pages this week.", 
+                    "Draft with AI, review with humans.", 
+                    "Bookmark Section508.gov and WebAIM.", 
+                    "Use 'Alt Text as Poetry' for tone."
+                ],
+                notes: "Tangible homework for the audience."
             },
             {
                 title: "Resources",
-                points: ["Section508.gov/Authoring-Alt-Text", "WebAIM Million Annual Report", "Alt Text as Poetry (Coklyat & Finnegan)", "TetraLogical Foundations Series"],
-                notes: "Citations."
+                points: [
+                    "Section508.gov/Authoring-Alt-Text", 
+                    "WebAIM Million Annual Report", 
+                    "Alt Text as Poetry (Coklyat & Finnegan)", 
+                    "TetraLogical Foundations Series"
+                ],
+                notes: "Citations and further reading."
             },
             {
                 title: "Foster Belonging",
-                points: ["Identity matters.", "Representation is a choice.", "Dignity is the goal.", "Do better than 'better than nothing'."],
-                notes: "Emotional closing."
+                points: [
+                    "Identity matters.", 
+                    "Representation is a choice.", 
+                    "Dignity is the goal.", 
+                    "Do better than 'better than nothing'."
+                ],
+                notes: "Emotional closing statement. Belonging is a fundamental human need."
             },
             {
                 title: "Amy Kavanagh",
-                points: ["'Efficiency is an accessibility feature.'", "Don't waste the user's time.", "Focus on the REASON for the image."],
-                notes: "A plea for relevance."
+                points: [
+                    "'Efficiency is an accessibility feature.'", 
+                    "Don't waste the user's time.", 
+                    "Focus on the REASON for the image."
+                ],
+                notes: "A plea for relevance and brevity."
             },
             {
                 title: "Final Thought",
-                points: ["Access is a human right.", "Technology is a tool.", "Empathy is the architecture.", "Build for everyone."],
-                notes: "Inspiring close."
+                points: [
+                    "Access is a human right.", 
+                    "Technology is a tool.", 
+                    "Empathy is the architecture.", 
+                    "Build for everyone."
+                ],
+                notes: "Inspiring close. Architecture is the key metaphor."
             },
             {
                 title: "Q&A",
                 subtitle: "Thank you!",
-                points: ["Twitter/LinkedIn: @scottdavis", "Slides available at [URL]"],
-                notes: "Contact info."
+                points: [
+                    "Twitter/LinkedIn: @scottdavis", 
+                    "Slides available at [URL]"
+                ],
+                notes: "Contact info. Open floor for questions."
             },
             {
                 title: "Closing Punchline",
-                points: ["You can't spell 'Alternative Text' without AI.", "But AI can't do it without YOU.", "30 years is enough. Let's finish the job."],
-                notes: "Final summary statement."
+                points: [
+                    "You can't spell 'Alternative Text' without AI.", 
+                    "But AI can't do it without YOU.", 
+                    "30 years is enough. Let's finish the job."
+                ],
+                notes: "Final summary statement. Micro-drop."
             }
         ];
 
@@ -728,7 +905,7 @@
                                 ${data.title}
                             </h2>
                             ${data.subtitle ? `<p class="m-slide-subtitle">${data.subtitle}</p>` : ''}
-                            ${data.content ? `<div style="font-size: 1.5rem; margin-bottom: 2rem;">${data.content}</div>` : ''}
+                            ${data.content ? `<div style="font-size: 1.25rem; margin-bottom: 1.5rem;">${data.content}</div>` : ''}
                             ${data.points && data.points.length > 0 ? `
                                 <ul class="m-slide-list">
                                     ${pointsHtml}
