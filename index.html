@@ -26,7 +26,8 @@
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             margin: 0;
             line-height: 1.5;
-            overflow: hidden; /* Prevent body scroll, use main content scroll */
+            height: 100vh;
+            overflow: hidden;
         }
 
         /* Focus indicators for WCAG 2.1 AA compliance */
@@ -52,6 +53,7 @@
             justify-content: space-between;
             align-items: center;
             z-index: 50;
+            flex-shrink: 0;
         }
 
         .l-main-wrapper {
@@ -72,8 +74,10 @@
             flex: 1;
             position: relative;
             background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
-            overflow-y: auto;
+            overflow: hidden; /* Slides manage their own internal overflow */
             outline: none;
+            display: flex;
+            flex-direction: column;
         }
 
         .l-notes {
@@ -94,8 +98,10 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100%;
+            height: 100%;
+            width: 100%;
             padding: 2rem;
+            overflow-y: auto;
             animation: slideIn 0.4s cubic-bezier(0, 0, 0.2, 1);
         }
 
@@ -113,16 +119,18 @@
             border-radius: 1.5rem;
             border: 1px solid #334155;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            flex-shrink: 0;
         }
 
         /* Hero Slide: Image + Right-side Text Overlay */
         .m-slide--hero {
             padding: 0; 
-            position: relative;
             background-size: contain; 
             background-position: left center; 
             background-repeat: no-repeat;
             background-color: #000; 
+            overflow: hidden;
+            position: relative;
         }
 
         .m-slide-overlay {
@@ -146,12 +154,19 @@
         .m-slide--full {
             padding: 0;
             background-color: #000;
+            overflow: hidden;
         }
 
         .m-full-img {
             width: 100%;
             height: 100%;
             object-fit: contain;
+            display: block;
+            /* Fallback style if image fails to load */
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            font-style: italic;
         }
 
         .m-nav-btn {
@@ -212,6 +227,19 @@
             display: none !important;
         }
 
+        /* Utility for screen-reader-only text (Accessibility Landmark) */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
         /* Print styles */
         @media print {
             .no-print { display: none !important; }
@@ -236,6 +264,9 @@
                 width: 100%;
                 background-color: rgba(15, 23, 42, 0.9);
                 padding: 2rem;
+                height: 50%;
+                border-left: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
             }
         }
     </style>
@@ -306,7 +337,7 @@
     <script>
         /**
          * SLIDE DATA DEFINITION
-         * Updated to use .png extensions as requested.
+         * Using .png extensions and img/ prefix for path organization.
          */
         const slideData = [
             {
@@ -457,7 +488,7 @@
             },
             {
                 title: "Common Mistakes in Alt Text",
-                points: ["Redundancy (repeating surrounding text).", "File names (DCIM_102.png).", "Wrong language (English alt on Spanish pages).", "Descriptive clutter."],
+                points: ["Redundancy (repeating surrounding text).", "File names (DCIM_102.jpg).", "Wrong language (English alt on Spanish pages).", "Descriptive clutter."],
                 notes: "Referencing the 'Mistakes' section from Section508.gov."
             },
             {
@@ -560,9 +591,13 @@
                 if (data.fullImage) {
                     /* SIMPLE FULL SCREEN IMAGE SLIDE 
                        Per user request: Simply include the image with alt text.
+                       Added visually hidden heading for accessibility focus management.
                     */
                     slide.className = `m-slide m-slide--full ${index === 0 ? 'is-active' : ''}`;
-                    slide.innerHTML = `<img src="${data.image}" alt="${data.imageAlt}" class="m-full-img">`;
+                    slide.innerHTML = `
+                        <h2 class="sr-only" tabindex="-1">${data.title}</h2>
+                        <img src="${data.image}" alt="${data.imageAlt}" class="m-full-img">
+                    `;
                 } 
                 else if (data.image) {
                     /* HERO SLIDE (Layout Slide 1) 
@@ -630,6 +665,7 @@
 
         /**
          * NAVIGATION LOGIC
+         * Updates classes, manages scroll, and announces for screen readers
          */
         function goToSlide(index) {
             if (index < 0 || index >= slideData.length) return;
@@ -647,14 +683,17 @@
 
             updateSlideUI();
             
+            // Screen reader announcement
             announcer.textContent = `Slide ${currentIndex + 1} of ${slideData.length}: ${slideData[currentIndex].title}`;
             
+            // Move focus to header (visible or sr-only) for accessibility
             const header = activeSlide.querySelector('h2');
             if (header) header.focus();
         }
 
         /**
          * UI REFRESH
+         * Updates notes and primary button disabled states
          */
         function updateSlideUI() {
             notesContent.innerHTML = slideData[currentIndex].notes || "No notes.";
@@ -669,6 +708,7 @@
 
         /**
          * TOGGLE FEATURES
+         * Presenter tools for customizing views
          */
         function toggleSidebar() {
             sideNav.classList.toggle('is-hidden');
@@ -686,6 +726,7 @@
         window.addEventListener('keydown', (e) => {
             const key = e.key.toLowerCase();
             
+            // Arrows and Space navigation
             if (e.key === 'ArrowRight' || e.key === ' ') {
                 e.preventDefault();
                 goToSlide(currentIndex + 1);
@@ -695,6 +736,7 @@
                 goToSlide(currentIndex - 1);
             }
 
+            // Shortcut keys
             if (key === 'l') toggleSidebar();
             if (key === 'n') toggleNotes();
             if (key === 'p') {
@@ -713,6 +755,7 @@
         document.getElementById('prev-btn').onclick = () => goToSlide(currentIndex - 1);
         document.getElementById('next-btn').onclick = () => goToSlide(currentIndex + 1);
 
+        // Start App
         window.onload = init;
     </script>
 </body>
