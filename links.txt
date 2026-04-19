@@ -16,3 +16,7 @@ https://www.section508.gov/create/alternative-text/
 WebAIM Million
 https://webaim.org/projects/million/
 
+HTML Living Spec
+https://html.spec.whatwg.org/multipage/images.html#alt
+
+
