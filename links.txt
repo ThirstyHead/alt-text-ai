@@ -13,5 +13,6 @@ https://tetralogical.com/blog/2022/01/24/text-descriptions/
 Authoring Meaningful Alternative Text
 https://www.section508.gov/create/alternative-text/
 
-
+WebAIM Million
+https://webaim.org/projects/million/
 
