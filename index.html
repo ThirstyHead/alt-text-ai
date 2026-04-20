@@ -676,171 +676,41 @@
             },
 
             {
-                title: "Images Containing Text",
-                points: [
-                    "Rule: Transcription must be word-for-word.", 
-                    "Best Practice: Avoid 'burnt-in' text entirely.", 
-                    "AI Win: Optical Character Recognition (OCR) is highly reliable here."
-                ],
+                title: "Section 508: Images Containing Text",
+                fullImage: true,
+                image: "img/section508-img-with-text.png",
+                imageAlt: "OCR is where AI shines most.",
                 notes: "OCR is where AI shines most. Use it as a drafting tool for text heavy images."
             },
             {
-                title: "Logos",
-                points: [
-                    "Logos are NEVER decorative.", 
-                    "Requirement: Agency Name + Slogan/Message.", 
-                    "Helpful: 'GSA logo: Section508.gov - Buy. Build. Be Accessible.'"
-                ],
+                title: "Section 508: Logos",
+                fullImage: true,
+                image: "img/section508-logos.png",
+                imageAlt: "Logos are NEVER decorative.",
                 notes: "508 explicitly forbids empty alt for logos. It's about branding and identification."
             },
             {
-                title: "Lived Experience: Thomas Reid",
-                points: [
-                    "Voice actor and advocate.", 
-                    "Identity (race/gender) matters for agency.", 
-                    "'Let me have that experience.'", 
-                    "Context determines the depth of description."
-                ],
-                notes: "Identity descriptors matter. Omitting them is a form of exclusion."
-            },
-            {
-                title: "Decorative Images",
-                points: [
-                    "Purpose: Formatting, borders, spacers.", 
-                    "Technical: <code>alt=''</code> or null attribute.", 
-                    "Failure: Blank alt leads to filename reading."
-                ],
+                title: "Section 508: Decorative Images",
+                fullImage: true,
+                image: "img/section508-decorative.png",
+                imageAlt: "Decorative images are used for Formatting, borders, spacers.",
                 notes: "Empty Alt is a signal; No Alt is a bug. Screen readers skip empty alt but read file names for missing ones."
             },
             {
-                title: "Background Images",
-                points: [
-                    "Usually skipped by Screen Readers.", 
-                    "Danger: Critical info 'ghosted' in CSS backgrounds.", 
-                    "Requirement: Move essential data to body text."
-                ],
+                title: "Section 508: Background Images",
+                fullImage: true,
+                image: "img/section508-background.png",
+                imageAlt: "Background images are Usually skipped by Screen Readers.",
                 notes: "If it's in the background, it better not be important. Otherwise, bring it to the foreground."
             },
             {
-                title: "Document Headers",
-                points: [
-                    "Logos in headers often get missed by readers.", 
-                    "Solution: Duplicate critical branding early in the body.", 
-                    "Ensure agency identity is announced immediately."
-                ],
-                notes: "Consistency across documents. Header content must be reachable."
-            },
-            {
-                title: "AI Hallucinations",
-                points: [
-                    "Case Study: Gemini and the Statue of Liberty 'Bird'.", 
-                    "AI interprets shadows as objects.", 
-                    "Risk: Describing 'ghost' objects that don't exist."
-                ],
-                notes: "AI is a probability engine, not a truth engine. Verification is mandatory."
-            },
-            {
-                title: "Lived Experience: Chancey Fleet",
-                points: [
-                    "The 'Emotional Valence' gap.", 
-                    "AI: 'People street demonstration'.", 
-                    "Human: 'Defiant protesters in the rain.'"
-                ],
-                notes: "AI fails at 'mood' and 'vibe'. Humans provide the soul of the description."
-            },
-            {
-                title: "Controls & Navigation",
-                points: [
-                    "Identify the action, not the shape.", 
-                    "Helpful: 'Next Arrow Button', 'Submit Query'.", 
-                    "Unhelpful: 'Right pointing triangle'."
-                ],
+                title: "Section 508: Controls & Navigation",
+                fullImage: true,
+                image: "img/section508-controls.png",
+                imageAlt: "Identify the action, not the shape.",
                 notes: "Functional images require functional text. Tell me what it DOES, not what it IS."
             },
-            {
-                title: "Form Elements",
-                points: [
-                    "Purpose: Input status and required fields.", 
-                    "Example: The Red Asterisk.", 
-                    "Helpful: <code>alt='Required'</code>.", 
-                    "Unhelpful: <code>alt='Asterisk'</code>."
-                ],
-                notes: "Communicate the status of the form. Use text for the label wherever possible."
-            },
-            {
-                title: "Bullet Points",
-                points: [
-                    "Semantic lists (UL/LI) are superior.", 
-                    "Custom icons must announce as 'bullet'.", 
-                    "Checkboxes must indicate state (Checked/Unchecked)."
-                ],
-                notes: "Structure over visual placement. AI can help check for semantic structure."
-            },
-            {
-                title: "Spacers & Separators",
-                points: [
-                    "Horizontal rules and empty images.", 
-                    "Usually decorative.", 
-                    "If used for a 'Section Break', describe as such."
-                ],
-                notes: "Cognitive navigation help. Don't let users guess why a line is there."
-            },
-            {
-                title: "Alt Text as Poetry",
-                points: [
-                    "Workbook by Coklyat & Finnegan.", 
-                    "Inclusive language requires identity validation.", 
-                    "Delight over dry compliance.", 
-                    "Belonging through expressive description."
-                ],
-                notes: "Moving beyond legal minimums into a world of delight and belonging."
-            },
-            {
-                title: "Charts & Graphs",
-                points: [
-                    "AI Use Case: Data Summarization.", 
-                    "Identify type (Bar/Pie) + Trend.", 
-                    "Provide link to data table.", 
-                    "Avoid repeating text already on page."
-                ],
-                notes: "AI is excellent at summarizing tables. Use it to generate the data overview."
-            },
-            {
-                title: "Complex Diagrams",
-                points: [
-                    "Flow charts, decision trees, org maps.", 
-                    "Describe order and relationships.", 
-                    "Often better conveyed as nested lists."
-                ],
-                notes: "Logical structure is the priority. AI can turn a flowchart image into a list structure."
-            },
-            {
-                title: "Watermarks",
-                points: [
-                    "Invisible to screen readers.", 
-                    "Critical info must be in body.", 
-                    "Barrier for low-vision users due to contrast."
-                ],
-                notes: "Avoid watermarks. They interfere with reading and hide info from screen readers."
-            },
-            {
-                title: "Signatures",
-                points: [
-                    "Authentication is the key.", 
-                    "Helpful: 'Signature: Jane Doe'.", 
-                    "Unhelpful: 'Jane Doe in neat cursive blue ink'."
-                ],
-                notes: "Identity and verification are what matters here."
-            },
-            {
-                title: "Context & Protest",
-                points: [
-                    "Thailand 'Three Finger Salute'.", 
-                    "AI without context: 'Crowd raising hands'.", 
-                    "AI with context: 'Emblem of resistance against authoritarian rule'."
-                ],
-                notes: "Context turns description into meaning. AI needs human-fed context."
-            },
+
             {
                 title: "Common Mistakes",
                 points: [
@@ -860,25 +730,7 @@
                 ],
                 notes: "Practical implementation advice for detailed images."
             },
-            {
-                title: "Identity Bias",
-                points: [
-                    "Mini-CPM misgendering with 'her' pronouns.", 
-                    "Llama 3.2 seeing 'two Black men' (only one in photo).", 
-                    "Probabilistic errors lead to dignity violations."
-                ],
-                notes: "AI inherits training data biases. This is a risk to user dignity."
-            },
-            {
-                title: "Can AI Write Meaningful Alt Text?",
-                points: [
-                    "Claude: Concise and predictable.", 
-                    "ChatGPT: Strong context, high descriptive detail.", 
-                    "Gemini: Frequent person-captioning refusal.", 
-                    "Verdict: Strong draft tool, poor 'Publish' tool."
-                ],
-                notes: "Comparison of current LLM performance (2025)."
-            },
+
             {
                 title: "Human-AI Collaboration",
                 points: [
@@ -889,101 +741,26 @@
                 ],
                 notes: "Don't automate blindly. Use AI as a starting point, not the end."
             },
-            {
-                title: "BeMyAI",
-                points: [
-                    "Léonie Watson's interactive approach.", 
-                    "Conversational discovery vs. static text.", 
-                    "Iterative prompting for deep dives."
-                ],
-                notes: "Talking to the image. A new paradigm for accessibility."
-            },
-            {
-                title: "Ethical Responsibility",
-                points: [
-                    "Developers are the final filter.", 
-                    "AI replicates training bias by default.", 
-                    "Empathy cannot be automated.", 
-                    "Dignity is a requirement."
-                ],
-                notes: "Closing the gap between technical code and human ethics."
-            },
-            {
-                title: "Accessibility as Innovation",
-                points: [
-                    "AI agents are the new screen readers.", 
-                    "Voice search dominance (50%+).", 
-                    "Inclusive code is higher-quality code."
-                ],
-                notes: "Springboard for innovation. Designing for the edges helps the middle."
-            },
-            {
-                title: "Action Plan",
-                points: [
-                    "Audit top 100 pages this week.", 
-                    "Draft with AI, review with humans.", 
-                    "Bookmark Section508.gov and WebAIM.", 
-                    "Use 'Alt Text as Poetry' for tone."
-                ],
-                notes: "Tangible homework for the audience."
-            },
-            {
-                title: "Resources",
-                points: [
-                    "Section508.gov/Authoring-Alt-Text", 
-                    "WebAIM Million Annual Report", 
-                    "Alt Text as Poetry (Coklyat & Finnegan)", 
-                    "TetraLogical Foundations Series"
-                ],
-                notes: "Citations and further reading."
-            },
-            {
-                title: "Foster Belonging",
-                points: [
-                    "Identity matters.", 
-                    "Representation is a choice.", 
-                    "Dignity is the goal.", 
-                    "Do better than 'better than nothing'."
-                ],
-                notes: "Emotional closing statement. Belonging is a fundamental human need."
-            },
-            {
-                title: "Amy Kavanagh",
-                points: [
-                    "'Efficiency is an accessibility feature.'", 
-                    "Don't waste the user's time.", 
-                    "Focus on the REASON for the image."
-                ],
-                notes: "A plea for relevance and brevity."
-            },
+            
             {
                 title: "Final Thought",
                 points: [
-                    "Access is a human right.", 
-                    "Technology is a tool.", 
-                    "Empathy is the architecture.", 
-                    "Build for everyone."
-                ],
-                notes: "Inspiring close. Architecture is the key metaphor."
-            },
-            {
-                title: "Q&A",
-                subtitle: "Thank you!",
-                points: [
-                    "Twitter/LinkedIn: @scottdavis", 
-                    "Slides available at [URL]"
-                ],
-                notes: "Contact info. Open floor for questions."
-            },
-            {
-                title: "Closing Punchline",
-                points: [
                     "You can't spell 'Alternative Text' without AI.", 
                     "But AI can't do it without YOU.", 
-                    "30 years is enough. Let's finish the job."
+                    "30 years of neglecting our responsiblity to write proper alt text is enough.",
+                    "Let's finish the job."
                 ],
                 notes: "Final summary statement. Micro-drop."
-            }
+            },
+            {
+                title: "You Can't Spell “Alternative Text” without AI",
+                subtitle: "Modern Accessibility and Artificial Intelligence",
+                content: "Scott Davis<br>scott@thirstyhead.com",
+                image: "img/alt-text-ai-title-slide.png",
+                imageAlt: "An abstract visual metaphor showing a digital iris with data streams, representing machine vision.",
+                notes: "Welcome to GIDS. This talk is about the intersection of 30 years of standard failure and the new frontier of AI-assisted accessibility."
+            },
+
         ];
 
         let currentIndex = 0;
